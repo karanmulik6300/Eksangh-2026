@@ -65,7 +65,20 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 .brand-main{font-size:14px;font-weight:900;letter-spacing:.3px}
 .brand-sub{font-size:12px;opacity:.88;margin-top:4px}
 @media(max-width:600px){.mandal-brand{gap:9px;padding:9px 8px}.brand-idol,.brand-logo{width:88px;height:88px;border-radius:14px}.brand-main{font-size:12px}.brand-sub{font-size:10px}}
-</style><style>.member-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.member-summary>div{background:#f8fafc;border:1px solid #e5e7eb;border-radius:15px;padding:12px}.member-summary span{display:block;font-size:12px;color:#777}.member-summary b{display:block;font-size:20px;margin-top:4px}.member-tools{display:grid;grid-template-columns:1fr 170px auto;gap:10px;margin:12px 0}.member-list{border-top:1px solid #eee}.member-row{display:grid;grid-template-columns:42px 1fr auto auto;gap:10px;align-items:center;padding:12px 4px;border-bottom:1px solid #eee}.member-no{font-weight:800;color:#777}.member-name{font-weight:800}.member-sub{font-size:12px;color:#777;margin-top:3px}.member-paid{font-weight:900;text-align:right}.member-status{padding:5px 9px;border-radius:9px;font-size:12px;font-weight:800;display:inline-block}.member-status.paid{background:#dcfce7;color:#166534}.member-status.due{background:#fee2e2;color:#991b1b}.member-edit{padding:8px 10px;border-radius:10px;font-size:13px}.member-edit-box{background:#f7f5ff;border:1px solid #ddd6fe;border-radius:16px;padding:14px;margin:12px 0}.member-empty{text-align:center;padding:25px;color:#777}@media(max-width:700px){.member-summary{grid-template-columns:1fr 1fr}.member-tools{grid-template-columns:1fr 1fr}.member-tools button{grid-column:1/-1}.member-row{grid-template-columns:30px 1fr auto}.member-paid{grid-column:2}.member-row .member-edit{grid-column:3;grid-row:1/3}}</style></head>
+</style><style>.member-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.member-summary>div{background:#f8fafc;border:1px solid #e5e7eb;border-radius:15px;padding:12px}.member-summary span{display:block;font-size:12px;color:#777}.member-summary b{display:block;font-size:20px;margin-top:4px}.member-tools{display:grid;grid-template-columns:1fr 170px auto;gap:10px;margin:12px 0}.member-list{border-top:1px solid #eee}.member-row{display:grid;grid-template-columns:42px 1fr auto auto;gap:10px;align-items:center;padding:12px 4px;border-bottom:1px solid #eee}.member-no{font-weight:800;color:#777}.member-name{font-weight:800}.member-sub{font-size:12px;color:#777;margin-top:3px}.member-paid{font-weight:900;text-align:right}.member-status{padding:5px 9px;border-radius:9px;font-size:12px;font-weight:800;display:inline-block}.member-status.paid{background:#dcfce7;color:#166534}.member-status.due{background:#fee2e2;color:#991b1b}.member-edit{padding:8px 10px;border-radius:10px;font-size:13px}.member-edit-box{background:#f7f5ff;border:1px solid #ddd6fe;border-radius:16px;padding:14px;margin:12px 0}.member-empty{text-align:center;padding:25px;color:#777}@media(max-width:700px){.member-summary{grid-template-columns:1fr 1fr}.member-tools{grid-template-columns:1fr 1fr}.member-tools button{grid-column:1/-1}.member-row{grid-template-columns:30px 1fr auto}.member-paid{grid-column:2}.member-row .member-edit{grid-column:3;grid-row:1/3}}</style>
+<style id="hishob-module-css">
+#hishob .hstat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+#hishob .hstat{background:#fff;border:1px solid #e5e5ea;border-radius:18px;padding:14px;box-shadow:0 3px 12px #00000008}
+#hishob .hlabel{font-size:13px;color:#73737b;font-weight:700}#hishob .hvalue{font-size:25px;font-weight:900;margin-top:6px}
+#hishob .hsection{background:#fff;border:1px solid #e5e5ea;border-radius:18px;padding:14px;margin-bottom:12px}
+#hishob .hhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.hhead h3{margin:0;font-size:18px}
+#hishob .hrow{display:flex;justify-content:space-between;gap:10px;padding:11px 2px;border-top:1px solid #eee;align-items:center}.hrow:first-child{border-top:0}.hname{font-weight:800}.hsub{font-size:12px;color:#777;margin-top:3px}.hamt{font-weight:900;white-space:nowrap}.hactions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+#hishob .hform{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hfull{grid-column:1/-1}.hnotice{padding:10px 12px;border-radius:12px;background:#f3e8ff;color:#5b21b6;font-size:13px;margin-bottom:12px}
+#hishob .hdanger{color:#b91c1c;background:#fee2e2}.hmuted{color:#777;font-size:13px}.hpositive{color:#16835b}.hnegative{color:#c83242}
+@media(max-width:700px){#hishob .hstat-grid{grid-template-columns:1fr 1fr}#hishob .hform{grid-template-columns:1fr}.hfull{grid-column:auto}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
 <body>
 <header class="header">
 <h1>🪔 एक संघ तरुण मंडळ</h1>
@@ -101,21 +114,10 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 </section>
 
 <div id="status" class="notice loading">☁️ Cloud data load होत आहे...</div>
-<div class="major-wrap">
- <div class="card opening-card">
-  <div class="opening-row"><div><div class="label">🪙 मागील वर्षाची शिल्लक</div><div class="opening-value" id="openingBalance">₹0</div><div class="balance-note">ही रक्कम नवीन वर्षाच्या सुरुवातीची शिल्लक म्हणून धरली जाईल.</div></div>
-  <div class="settings-inline editor hidden"><input id="openingInput" type="number" min="0" placeholder="मागील वर्षाची शिल्लक"><button class="primary" id="saveOpening" type="button">💾 शिल्लक Save</button></div></div>
- </div>
- <div class="major-grid">
-  <div class="major-card"><h3>🎉 आगमन सोहळा</h3><div class="major-total green" id="arrivalTotal">₹0</div></div>
-  <div class="major-card"><h3>🎭 सजीव देखावा</h3><div class="major-total green" id="liveShowTotal">₹0</div></div>
-  <div class="major-card"><h3>📌 इतर खर्च</h3><div class="major-total red" id="otherExpenseTotal">₹0</div></div>
- </div>
-</div>
 
 <div class="tabs">
  <button class="tab active" data-tab="home" type="button">🏠 Home</button>
- <button class="tab" data-tab="ledger" type="button">📒 हिशोब नोंदवही</button>
+ <button class="tab" data-tab="ledger" type="button">📒 हिशोब नोंदवही</button><button class="tab" data-tab="hishob" type="button">📊 हिशोब</button>
  <button class="tab editor hidden" data-tab="member" type="button">👥 सदस्यांची वर्गणी</button><button class="tab editor hidden" data-tab="donation" type="button">🎁 बाहेरील/गावातील देणगी</button>
  <button class="tab editor hidden" data-tab="expense" type="button">💸 खर्च</button>
 </div>
@@ -146,6 +148,31 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 <div class="checkbox"><div class="checkrow"><span>एकूण जमा</span><b class="green" id="checkIn">₹0</b></div><div class="checkrow"><span>एकूण खर्च</span><b class="red" id="checkOut">₹0</b></div><div class="checkrow"><span>शिल्लक</span><b class="purple" id="checkBal">₹0</b></div><div class="checkrow"><span>एकूण व्यवहार</span><b id="checkCnt">0</b></div></div>
 </div></section>
 
+
+<section id="hishob" class="page hidden">
+ <div class="hnotice">📊 हा स्वतंत्र हिशोब module आहे. जुन्या file मधील <b>खर्चाची एकही नोंद</b> येथे घेतलेली नाही. येथे नवीन खर्च स्वतंत्रपणे नोंदवला जाईल.</div>
+ <div class="hstat-grid">
+  <div class="hstat"><div class="hlabel">मागील वर्षाची शिल्लक</div><div class="hvalue purple" id="hmPrev">₹0</div></div>
+  <div class="hstat"><div class="hlabel">सदस्य वर्गणी</div><div class="hvalue hpositive" id="hmMember">₹0</div></div>
+  <div class="hstat"><div class="hlabel">बाहेरील / गावातील वर्गणी</div><div class="hvalue hpositive" id="hmOutside">₹0</div></div>
+  <div class="hstat"><div class="hlabel">एकूण जमा</div><div class="hvalue hpositive" id="hmCollected">₹0</div></div>
+  <div class="hstat"><div class="hlabel">नवीन खर्च</div><div class="hvalue hnegative" id="hmExpense">₹0</div></div>
+  <div class="hstat"><div class="hlabel">अंतिम शिल्लक</div><div class="hvalue purple" id="hmBalance">₹0</div></div>
+ </div>
+ <div class="hsection">
+  <div class="hhead"><h3>⚙️ हिशोब नियंत्रण</h3><button class="primary" id="hExcel" type="button">📥 Download Excel</button></div>
+  <div class="hmuted">Edit / Delete करण्यासाठी खजिनदार Login आवश्यक आहे.</div>
+  <div class="hactions"><button id="hRefreshSource" type="button">↻ जुन्या file मधून फक्त वर्गणी आणा</button></div>
+ </div>
+ <div class="hsection" id="hPrevSection">
+  <div class="hhead"><h3>💼 मागील वर्षाची शिल्लक</h3><b class="purple" id="hPrevSmall">₹0</b></div>
+  <div class="hform"><div><label>मागील वर्षाची शिल्लक</label><input id="hPrevInput" type="number" min="0" placeholder="उदा. 10000"></div><div class="hactions" style="align-items:end"><button class="primary" id="hPrevSave" type="button">💾 Save</button></div></div>
+ </div>
+ <div class="hsection"><div class="hhead"><h3>👥 सदस्यांची वर्गणी</h3><b class="hpositive" id="hMemberTotal">₹0</b></div><div id="hMemberList"></div></div>
+ <div class="hsection"><div class="hhead"><h3>🎁 बाहेरील / गावातील वर्गणी</h3><b class="hpositive" id="hOutsideTotal">₹0</b></div><div class="hactions"><button class="primary" id="hAddOutside" type="button">➕ नवीन वर्गणी</button></div><div id="hOutsideList"></div><div id="hOutsideForm" class="hidden" style="margin-top:12px"><div class="hform"><div><label>नाव *</label><input id="hoName"></div><div><label>रक्कम *</label><input id="hoAmount" type="number" min="0"></div><div><label>तारीख</label><input id="hoDate" type="date"></div><div><label>नोंद</label><input id="hoNote"></div></div><div class="hactions"><button class="primary" id="hSaveOutside" type="button">💾 Save</button><button id="hCancelOutside" type="button">रद्द करा</button></div></div></div>
+ <div class="hsection"><div class="hhead"><h3>💸 नवीन खर्च</h3><b class="hnegative" id="hExpenseTotal">₹0</b></div><div class="hactions"><button class="primary" id="hAddExpense" type="button">➕ नवीन खर्च</button></div><div id="hExpenseList"></div><div id="hExpenseForm" class="hidden" style="margin-top:12px"><div class="hform"><div><label>खर्चाचे वर्णन *</label><input id="heName"></div><div><label>रक्कम *</label><input id="heAmount" type="number" min="0"></div><div><label>तारीख</label><input id="heDate" type="date"></div><div><label>नोंद</label><input id="heNote"></div></div><div class="hactions"><button class="primary" id="hSaveExpense" type="button">💾 Save</button><button id="hCancelExpense" type="button">रद्द करा</button></div></div></div>
+</section>
+
 <section id="member" class="page hidden editor"><div class="card"><h2>👥 मंडळाच्या सदस्यांची वर्गणी</h2>
 <div class="member-summary"><div><span>एकूण सदस्य</span><b id="memberCount">24</b></div><div><span>एकूण अपेक्षित</span><b id="memberExpected">₹0</b></div><div><span>जमा</span><b class="green" id="memberPaid">₹0</b></div><div><span>बाकी</span><b class="red" id="memberDue">₹0</b></div></div>
 <div class="member-tools"><input id="memberSearch" placeholder="🔎 सदस्याचे नाव शोधा"><select id="memberStatusFilter"><option value="">सर्व</option><option value="paid">जमा</option><option value="due">बाकी</option></select><button class="primary" id="addMemberBtn" type="button">➕ नवीन सदस्य</button></div>
@@ -163,7 +190,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 <section id="expense" class="page hidden editor"><div class="card">
 <h2>💸 खर्च नोंदवा</h2><div class="formgrid">
 <div><label>खर्चाचे वर्णन *</label><input id="edesc"></div><div><label>रक्कम *</label><input id="eamount" type="number" min="1"></div>
-<div><label>खजिनदार *</label><select id="etreasurer"><option value="Karan">करण</option><option value="Dipak">दिपक</option></select></div><div><label>तारीख</label><input id="edate" type="date"></div><div><label>खर्चाचा प्रकार</label><select id="ecat"><option>आगमन सोहळा</option><option>सजीव देखावा</option><option>इतर खर्च</option><option>मंडप व सजावट</option><option>गणेश मूर्ती</option><option>रोषणाई व विद्युत</option><option>ध्वनी व्यवस्था</option><option>पूजा साहित्य</option><option>फुले व हार</option><option>अन्न व प्रसाद</option><option>सांस्कृतिक कार्यक्रम</option><option>वाहतूक</option><option>स्वच्छता</option><option>सुरक्षा व्यवस्था</option><option>जाहिरात व प्रसिद्धी</option><option>परवानगी व शासकीय शुल्क</option><option>बँक / UPI शुल्क</option><option>इतर</option></select></div>
+<div><label>खजिनदार *</label><select id="etreasurer"><option value="Karan">करण</option><option value="Dipak">दिपक</option></select></div><div><label>तारीख</label><input id="edate" type="date"></div><div><label>प्रकार</label><select id="ecat"><option>मंडप व सजावट</option><option>गणेश मूर्ती</option><option>रोषणाई व विद्युत</option><option>ध्वनी व्यवस्था</option><option>पूजा साहित्य</option><option>फुले व हार</option><option>अन्न व प्रसाद</option><option>सांस्कृतिक कार्यक्रम</option><option>वाहतूक</option><option>स्वच्छता</option><option>सुरक्षा व्यवस्था</option><option>जाहिरात व प्रसिद्धी</option><option>परवानगी व शासकीय शुल्क</option><option>बँक / UPI शुल्क</option><option>इतर</option></select></div>
 <div><label>पेमेंट पद्धत</label><select id="emode"><option>Cash</option><option>UPI</option><option>Bank</option><option>Cheque</option></select></div><div><label>Vendor</label><input id="vendor"></div>
 <div style="grid-column:1/-1"><label>Bill / नोंद</label><textarea id="enote"></textarea></div>
 </div><div class="actions"><button class="primary" id="saveExpense" type="button">➕ Save Expense</button></div></div></section>
@@ -174,10 +201,6 @@ const SUPABASE_URL="https://ddreocceewjmfdaltlun.supabase.co";
 const SUPABASE_KEY="sb_publishable_RJLtktd30k1cJyhHnEH3oQ_jZLMZkX-";
 const EDITOR_EMAIL="karanmulik6300@gmail.com";
 const MANDAL_ID="ek-sangh-2026";
-const OPENING_BALANCE_KEY="ek_sangh_opening_balance_2026_v2";
-function getOpeningBalance(){return Number(localStorage.getItem(OPENING_BALANCE_KEY)||0)}
-function setOpeningBalance(v){localStorage.setItem(OPENING_BALANCE_KEY,String(Math.max(0,Number(v)||0)))}
-
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
 let rows=[], editor=false;
 const $=id=>document.getElementById(id);
@@ -211,13 +234,7 @@ function item(x){
 function render(){
  const allInc=rows.filter(x=>x.type==="in"),allOut=rows.filter(x=>x.type==="out");
  const totalIn=allInc.reduce((a,x)=>a+Number(x.amount||0),0),totalOut=allOut.reduce((a,x)=>a+Number(x.amount||0),0);
- const opening=getOpeningBalance();
- const arrival=allOut.filter(x=>x.category==="आगमन सोहळा").reduce((a,x)=>a+Number(x.amount||0),0);
- const liveShow=allOut.filter(x=>x.category==="सजीव देखावा").reduce((a,x)=>a+Number(x.amount||0),0);
- const other=allOut.filter(x=>x.category!=="आगमन सोहळा"&&x.category!=="सजीव देखावा").reduce((a,x)=>a+Number(x.amount||0),0);
- $("openingBalance").textContent=money(opening); if($("openingInput")) $("openingInput").value=opening||"";
- $("arrivalTotal").textContent=money(arrival); $("liveShowTotal").textContent=money(liveShow); $("otherExpenseTotal").textContent=money(other);
- $("tin").textContent=money(totalIn);$("tout").textContent=money(totalOut);$("bal").textContent=money(opening+totalIn-totalOut);$("cnt").textContent=rows.length;
+ $("tin").textContent=money(totalIn);$("tout").textContent=money(totalOut);$("bal").textContent=money(totalIn-totalOut);$("cnt").textContent=rows.length;
  $("incomeTotal").textContent=money(totalIn);$("expenseTotal").textContent=money(totalOut);
  const sorted=r=>[...r].sort((a,b)=>String(b.transaction_date).localeCompare(String(a.transaction_date)));
  $("incomeList").innerHTML=sorted(allInc).map(item).join("")||'<div class="muted" style="padding:18px">जमा झालेली नोंद नाही.</div>';
@@ -315,11 +332,6 @@ document.querySelectorAll(".tab").forEach(x=>x.onclick=()=>showTab(x.dataset.tab
 $("search").oninput=render;
 ["filterTreasurer","filterType","filterFrom","filterTo","filterMin","filterMax","amountPreset","sortBy"].forEach(id=>{$(id).oninput=render;$(id).onchange=render});
 $("clearFilters").onclick=()=>{$("search").value="";$("filterTreasurer").value="";$("filterType").value="";$("filterFrom").value="";$("filterTo").value="";$("filterMin").value="";$("filterMax").value="";$("amountPreset").value="";$("sortBy").value="date-desc";render()};
-
-$("saveOpening").onclick=()=>{
- const v=Number($("openingInput").value); if(v<0||!Number.isFinite(v))return alert("योग्य रक्कम भरा.");
- setOpeningBalance(v); render(); alert("मागील वर्षाची शिल्लक Save झाली.");
-};
 
 $("saveMember").onclick=()=>{
  const n=$("mname").value.trim(), a=Number($("mamount").value); if(!n||a<=0)return alert("नाव आणि रक्कम भरा.");
@@ -453,5 +465,37 @@ $('saveMemberEdit').onclick=async()=>{
  saveMembers();renderMembers();$('memberEditorBox').classList.add('hidden');memberEditId=null;
 };
 renderMembers();
-</script></body>
+</script>
+<script id="hishob-module-js">
+(function(){
+ const K={prev:'ek_sangh_hishob_prev_2026',mem:'ek_sangh_hishob_members_2026',out:'ek_sangh_hishob_outside_2026',exp:'ek_sangh_hishob_expenses_2026',init:'ek_sangh_hishob_init_2026'};
+ const H=id=>document.getElementById(id); const hm=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
+ const get=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k));return x??d}catch(e){return d}}; const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+ let prev=Number(get(K.prev,0)||0), membersH=get(K.mem,null), outsideH=get(K.out,[]), expensesH=get(K.exp,[]);
+ if(!Array.isArray(membersH)||!membersH.length){membersH=(typeof seedMembers!=='undefined'?seedMembers:[]).map(m=>({id:m.id,name:m.name,amount:Number(m.amount||0),paid:Number(m.paid||0)}));put(K.mem,membersH)}
+ function canEdit(){if(typeof editor!=='undefined'&&editor)return true;alert('खजिनदार Login आवश्यक आहे.');return false}
+ function renderH(){
+  const mt=membersH.reduce((a,x)=>a+Number(x.paid||0),0), ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0), et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0), collected=mt+ot, bal=prev+collected-et;
+  H('hmPrev').textContent=hm(prev);H('hPrevSmall').textContent=hm(prev);H('hmMember').textContent=hm(mt);H('hmOutside').textContent=hm(ot);H('hmCollected').textContent=hm(collected);H('hmExpense').textContent=hm(et);H('hmBalance').textContent=hm(bal);H('hMemberTotal').textContent=hm(mt);H('hOutsideTotal').textContent=hm(ot);H('hExpenseTotal').textContent=hm(et);H('hPrevInput').value=prev||'';
+  H('hMemberList').innerHTML=membersH.map((m,i)=>`<div class="hrow"><div><div class="hname">${escH(m.name)}</div><div class="hsub">वर्गणी: ${hm(m.amount)} • जमा: ${hm(m.paid)} • बाकी: ${hm(Math.max(0,Number(m.amount||0)-Number(m.paid||0)))}</div></div><div><b class="hamt hpositive">${hm(m.paid)}</b>${typeof editor!=='undefined'&&editor?`<div><button type="button" onclick="window.hEditMember('${m.id}')">✏️ Edit</button></div>`:''}</div></div>`).join('')||'<div class="hmuted">सदस्यांची नोंद उपलब्ध नाही.</div>';
+  H('hOutsideList').innerHTML=outsideH.map((x,i)=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">${escH(x.date||'')}${x.note?' • '+escH(x.note):''}</div></div><div><b class="hamt hpositive">${hm(x.amount)}</b>${typeof editor!=='undefined'&&editor?`<div><button type="button" onclick="window.hDelOutside(${i})">🗑️</button></div>`:''}</div></div>`).join('')||'<div class="hmuted">बाहेरील / गावातील वर्गणीची नोंद नाही.</div>';
+  H('hExpenseList').innerHTML=expensesH.map((x,i)=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">${escH(x.date||'')}${x.note?' • '+escH(x.note):''}</div></div><div><b class="hamt hnegative">− ${hm(x.amount)}</b>${typeof editor!=='undefined'&&editor?`<div><button class="hdanger" type="button" onclick="window.hDelExpense(${i})">🗑️ Delete</button></div>`:''}</div></div>`).join('')||'<div class="hmuted">नवीन खर्च अजून नोंदवलेला नाही.</div>';
+ }
+ function escH(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ window.hEditMember=function(id){if(!canEdit())return;const m=membersH.find(x=>x.id===id);if(!m)return;const p=prompt('जमा रक्कम',String(m.paid??0));if(p===null)return;const n=Number(p);if(!Number.isFinite(n)||n<0||n>Number(m.amount||0)){alert('योग्य जमा रक्कम द्या.');return}m.paid=n;put(K.mem,membersH);renderH()};
+ window.hDelOutside=function(i){if(!canEdit()||!confirm('ही वर्गणी delete करायची का?'))return;outsideH.splice(i,1);put(K.out,outsideH);renderH()};
+ window.hDelExpense=function(i){if(!canEdit()||!confirm('हा नवीन खर्च delete करायचा का?'))return;expensesH.splice(i,1);put(K.exp,expensesH);renderH()};
+ H('hPrevSave').onclick=()=>{if(!canEdit())return;const n=Number(H('hPrevInput').value||0);if(!Number.isFinite(n)||n<0)return alert('योग्य शिल्लक द्या.');prev=n;put(K.prev,prev);renderH()};
+ H('hAddOutside').onclick=()=>{if(!canEdit())return;H('hOutsideForm').classList.remove('hidden');H('hoDate').value=new Date().toLocaleDateString('en-CA')};
+ H('hCancelOutside').onclick=()=>H('hOutsideForm').classList.add('hidden');
+ H('hSaveOutside').onclick=()=>{if(!canEdit())return;const name=H('hoName').value.trim(),amount=Number(H('hoAmount').value||0);if(!name||amount<=0)return alert('नाव आणि रक्कम भरा.');outsideH.push({id:Date.now(),name,amount,date:H('hoDate').value,note:H('hoNote').value.trim()});put(K.out,outsideH);H('hOutsideForm').classList.add('hidden');H('hoName').value='';H('hoAmount').value='';H('hoNote').value='';renderH()};
+ H('hAddExpense').onclick=()=>{if(!canEdit())return;H('hExpenseForm').classList.remove('hidden');H('heDate').value=new Date().toLocaleDateString('en-CA')};
+ H('hCancelExpense').onclick=()=>H('hExpenseForm').classList.add('hidden');
+ H('hSaveExpense').onclick=()=>{if(!canEdit())return;const name=H('heName').value.trim(),amount=Number(H('heAmount').value||0);if(!name||amount<=0)return alert('वर्णन आणि रक्कम भरा.');expensesH.push({id:Date.now(),name,amount,date:H('heDate').value,note:H('heNote').value.trim()});put(K.exp,expensesH);H('hExpenseForm').classList.add('hidden');H('heName').value='';H('heAmount').value='';H('heNote').value='';renderH()};
+ H('hRefreshSource').onclick=()=>{if(!canEdit())return;if(!confirm('जुन्या file मधून फक्त जमा वर्गणी पुन्हा आणायची? जुना खर्च आणला जाणार नाही.'))return;const src=(typeof rows!=='undefined'?rows:[]).filter(x=>x.type==='in');const memberMap={};src.filter(x=>x.category==='सदस्य वर्गणी').forEach(x=>{const n=String(x.donor_name||'').trim();if(n)memberMap[n]=(memberMap[n]||0)+Number(x.amount||0)});membersH=membersH.map(m=>({...m,paid:memberMap[m.name]??m.paid}));const outside=src.filter(x=>x.category!=='सदस्य वर्गणी').map(x=>({id:'src_'+x.id,name:x.donor_name||'नाव नाही',amount:Number(x.amount||0),date:x.transaction_date||'',note:x.mobile_note||x.category||''}));outsideH=outside;put(K.mem,membersH);put(K.out,outsideH);renderH();alert('फक्त जमा वर्गणी update केली आहे. जुना खर्च घेतलेला नाही.')};
+ H('hExcel').onclick=()=>{if(typeof XLSX==='undefined'){alert('Excel library load झाली नाही. Internet चालू करून पुन्हा प्रयत्न करा.');return}const mt=membersH.reduce((a,x)=>a+Number(x.paid||0),0),ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0),et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0),data=[['एक संघ तरुण मंडळ | गणेशोत्सव २०२६'],['हिशोब सारांश'],['मागील वर्षाची शिल्लक',prev],['सदस्य वर्गणी',mt],['बाहेरील / गावातील वर्गणी',ot],['एकूण जमा',mt+ot],['नवीन खर्च',et],['अंतिम शिल्लक',prev+mt+ot-et]];const wb=XLSX.utils.book_new();let ws=XLSX.utils.aoa_to_sheet(data);ws['!cols']=[{wch:34},{wch:18}];XLSX.utils.book_append_sheet(wb,ws,'Dashboard');const wm=XLSX.utils.json_to_sheet(membersH.map((x,i)=>({क्रमांक:i+1,नाव:x.name,वर्गणी:x.amount,जमा:x.paid,बाकी:Math.max(0,Number(x.amount||0)-Number(x.paid||0))})));wm['!cols']=[{wch:10},{wch:28},{wch:16},{wch:16},{wch:16}];XLSX.utils.book_append_sheet(wb,wm,'Member Contributions');const wo=XLSX.utils.json_to_sheet(outsideH.map(x=>({नाव:x.name,रक्कम:x.amount,तारीख:x.date,नोंद:x.note||''})));wo['!cols']=[{wch:28},{wch:16},{wch:16},{wch:35}];XLSX.utils.book_append_sheet(wb,wo,'Outside Contributions');const we=XLSX.utils.json_to_sheet(expensesH.map(x=>({वर्णन:x.name,रक्कम:x.amount,तारीख:x.date,नोंद:x.note||''})));we['!cols']=[{wch:32},{wch:16},{wch:16},{wch:35}];XLSX.utils.book_append_sheet(wb,we,'New Expenses');XLSX.writeFile(wb,'Ek_Sangh_Tarun_Mandal_Hishob_2026.xlsx')};
+ renderH();
+})();
+</script>
+</body>
 </html>
