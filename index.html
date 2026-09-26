@@ -162,7 +162,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
  <div class="hsection">
   <div class="hhead"><h3>⚙️ हिशोब नियंत्रण</h3><button class="primary" id="hExcel" type="button">📥 Download Excel</button></div>
   <div class="hmuted">Edit / Delete करण्यासाठी खजिनदार Login आवश्यक आहे.</div>
-  <div class="hactions"><button id="hRefreshSource" type="button">↻ जुन्या file मधून फक्त वर्गणी आणा</button></div>
+  <div class="notice" style="margin-top:0">ℹ️ हा template पूर्णपणे रिकामा आहे. पुढे तुम्हीच सदस्य, बाहेरील वर्गणी, मागील शिल्लक आणि खर्च भरू शकता.</div>
  </div>
  <div class="hsection" id="hPrevSection">
   <div class="hhead"><h3>💼 मागील वर्षाची शिल्लक</h3><b class="purple" id="hPrevSmall">₹0</b></div>
@@ -366,10 +366,8 @@ db.channel("transactions-live")
 load();
 </script>
 <script>
-const MEMBER_STORAGE_KEY='ek_sangh_members_2026_v1';
-const seedMembers=[
-['दिलीप मुळीक',5001,5001],['विकास पाटील',5000,0],['संतोष पाटील',5000,5000],['विजय मुळीक',5000,5000],['संतोष मुळीक',11000,11000],['बालाजी पाढंरे',5555,5555],['विजय मुळीक (बबलु)',5000,0],['राहुल मुळीक',5000,5000],['अक्षय मुळीक',5000,0],['लोखंडे सर',5000,0],['सौरभ मुळीक',7000,7000],['रेहाण मणेर',5000,0],['शिवराज पाटील',5000,5000],['संजय पाटील(टेलर)',5000,5000],['सतिश पाटील',5001,5001],['प्रणव मुळीक',5000,5000],['स्वप्निल मुळीक',5000,5000],['प्रकाश मुळीक',5000,0],['विकी मुळीक',5000,5000],['करण मुळीक',5000,5000],['साईराज मुळीक',4000,4000],['दिपक मुळीक',7000,7000],['तानाजी मुळीक',1000,1000],['सचिन मुळीक',2000,2000]
-].map((x,i)=>({id:'m'+(i+1),name:x[0],amount:x[1],paid:x[2],status:x[2]>=x[1]?'paid':'due',treasurer:''}));
+const MEMBER_STORAGE_KEY='ek_sangh_members_2026_v2_empty';
+const seedMembers=[];
 let memberEditId=null;
 function getMembers(){try{const x=JSON.parse(localStorage.getItem(MEMBER_STORAGE_KEY));if(Array.isArray(x)&&x.length)return x}catch(e){}return seedMembers.map(x=>({...x}))}
 let members=getMembers();
@@ -468,11 +466,11 @@ renderMembers();
 </script>
 <script id="hishob-module-js">
 (function(){
- const K={prev:'ek_sangh_hishob_prev_2026',mem:'ek_sangh_hishob_members_2026',out:'ek_sangh_hishob_outside_2026',exp:'ek_sangh_hishob_expenses_2026',init:'ek_sangh_hishob_init_2026'};
+ const K={prev:'ek_sangh_hishob_prev_2026_v2_empty',mem:'ek_sangh_hishob_members_2026_v2_empty',out:'ek_sangh_hishob_outside_2026_v2_empty',exp:'ek_sangh_hishob_expenses_2026_v2_empty',init:'ek_sangh_hishob_init_2026_v2_empty'};
  const H=id=>document.getElementById(id); const hm=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
  const get=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k));return x??d}catch(e){return d}}; const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
  let prev=Number(get(K.prev,0)||0), membersH=get(K.mem,null), outsideH=get(K.out,[]), expensesH=get(K.exp,[]);
- if(!Array.isArray(membersH)||!membersH.length){membersH=(typeof seedMembers!=='undefined'?seedMembers:[]).map(m=>({id:m.id,name:m.name,amount:Number(m.amount||0),paid:Number(m.paid||0)}));put(K.mem,membersH)}
+ if(!Array.isArray(membersH)){membersH=[];put(K.mem,membersH)}
  function canEdit(){if(typeof editor!=='undefined'&&editor)return true;alert('खजिनदार Login आवश्यक आहे.');return false}
  function renderH(){
   const mt=membersH.reduce((a,x)=>a+Number(x.paid||0),0), ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0), et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0), collected=mt+ot, bal=prev+collected-et;
@@ -492,8 +490,67 @@ renderMembers();
  H('hAddExpense').onclick=()=>{if(!canEdit())return;H('hExpenseForm').classList.remove('hidden');H('heDate').value=new Date().toLocaleDateString('en-CA')};
  H('hCancelExpense').onclick=()=>H('hExpenseForm').classList.add('hidden');
  H('hSaveExpense').onclick=()=>{if(!canEdit())return;const name=H('heName').value.trim(),amount=Number(H('heAmount').value||0);if(!name||amount<=0)return alert('वर्णन आणि रक्कम भरा.');expensesH.push({id:Date.now(),name,amount,date:H('heDate').value,note:H('heNote').value.trim()});put(K.exp,expensesH);H('hExpenseForm').classList.add('hidden');H('heName').value='';H('heAmount').value='';H('heNote').value='';renderH()};
- H('hRefreshSource').onclick=()=>{if(!canEdit())return;if(!confirm('जुन्या file मधून फक्त जमा वर्गणी पुन्हा आणायची? जुना खर्च आणला जाणार नाही.'))return;const src=(typeof rows!=='undefined'?rows:[]).filter(x=>x.type==='in');const memberMap={};src.filter(x=>x.category==='सदस्य वर्गणी').forEach(x=>{const n=String(x.donor_name||'').trim();if(n)memberMap[n]=(memberMap[n]||0)+Number(x.amount||0)});membersH=membersH.map(m=>({...m,paid:memberMap[m.name]??m.paid}));const outside=src.filter(x=>x.category!=='सदस्य वर्गणी').map(x=>({id:'src_'+x.id,name:x.donor_name||'नाव नाही',amount:Number(x.amount||0),date:x.transaction_date||'',note:x.mobile_note||x.category||''}));outsideH=outside;put(K.mem,membersH);put(K.out,outsideH);renderH();alert('फक्त जमा वर्गणी update केली आहे. जुना खर्च घेतलेला नाही.')};
- H('hExcel').onclick=()=>{if(typeof XLSX==='undefined'){alert('Excel library load झाली नाही. Internet चालू करून पुन्हा प्रयत्न करा.');return}const mt=membersH.reduce((a,x)=>a+Number(x.paid||0),0),ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0),et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0),data=[['एक संघ तरुण मंडळ | गणेशोत्सव २०२६'],['हिशोब सारांश'],['मागील वर्षाची शिल्लक',prev],['सदस्य वर्गणी',mt],['बाहेरील / गावातील वर्गणी',ot],['एकूण जमा',mt+ot],['नवीन खर्च',et],['अंतिम शिल्लक',prev+mt+ot-et]];const wb=XLSX.utils.book_new();let ws=XLSX.utils.aoa_to_sheet(data);ws['!cols']=[{wch:34},{wch:18}];XLSX.utils.book_append_sheet(wb,ws,'Dashboard');const wm=XLSX.utils.json_to_sheet(membersH.map((x,i)=>({क्रमांक:i+1,नाव:x.name,वर्गणी:x.amount,जमा:x.paid,बाकी:Math.max(0,Number(x.amount||0)-Number(x.paid||0))})));wm['!cols']=[{wch:10},{wch:28},{wch:16},{wch:16},{wch:16}];XLSX.utils.book_append_sheet(wb,wm,'Member Contributions');const wo=XLSX.utils.json_to_sheet(outsideH.map(x=>({नाव:x.name,रक्कम:x.amount,तारीख:x.date,नोंद:x.note||''})));wo['!cols']=[{wch:28},{wch:16},{wch:16},{wch:35}];XLSX.utils.book_append_sheet(wb,wo,'Outside Contributions');const we=XLSX.utils.json_to_sheet(expensesH.map(x=>({वर्णन:x.name,रक्कम:x.amount,तारीख:x.date,नोंद:x.note||''})));we['!cols']=[{wch:32},{wch:16},{wch:16},{wch:35}];XLSX.utils.book_append_sheet(wb,we,'New Expenses');XLSX.writeFile(wb,'Ek_Sangh_Tarun_Mandal_Hishob_2026.xlsx')};
+ if(H('hRefreshSource')) H('hRefreshSource').onclick=()=>{if(!canEdit())return;if(!confirm('जुन्या file मधून फक्त जमा वर्गणी पुन्हा आणायची? जुना खर्च आणला जाणार नाही.'))return;const src=(typeof rows!=='undefined'?rows:[]).filter(x=>x.type==='in');const memberMap={};src.filter(x=>x.category==='सदस्य वर्गणी').forEach(x=>{const n=String(x.donor_name||'').trim();if(n)memberMap[n]=(memberMap[n]||0)+Number(x.amount||0)});membersH=membersH.map(m=>({...m,paid:memberMap[m.name]??m.paid}));const outside=src.filter(x=>x.category!=='सदस्य वर्गणी').map(x=>({id:'src_'+x.id,name:x.donor_name||'नाव नाही',amount:Number(x.amount||0),date:x.transaction_date||'',note:x.mobile_note||x.category||''}));outsideH=outside;put(K.mem,membersH);put(K.out,outsideH);renderH();alert('फक्त जमा वर्गणी update केली आहे. जुना खर्च घेतलेला नाही.')};
+  H('hExcel').onclick=()=>{
+    if(typeof XLSX==='undefined'){alert('Excel library load झाली नाही. Internet चालू करून पुन्हा प्रयत्न करा.');return}
+    const mt=membersH.reduce((a,x)=>a+Number(x.paid||0),0);
+    const ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0);
+    const et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0);
+    const memberExpected=membersH.reduce((a,x)=>a+Number(x.amount||0),0);
+    const balance=prev+mt+ot-et;
+    const wb=XLSX.utils.book_new();
+
+    const dashboard=[
+      ['एक संघ तरुण मंडळ | गणेशोत्सव २०२६'],
+      ['हिशोब सारांश'],
+      [],
+      ['मागील वर्षाची शिल्लक',prev],
+      ['सदस्यांची अपेक्षित वर्गणी',memberExpected],
+      ['सदस्य वर्गणी जमा',mt],
+      ['बाहेरील / गावातील वर्गणी',ot],
+      ['एकूण जमा',mt+ot],
+      ['एकूण खर्च',et],
+      ['अंतिम शिल्लक',balance],
+      [],
+      ['एकूण सदस्य',membersH.length],
+      ['बाहेरील वर्गणी नोंदी',outsideH.length],
+      ['खर्चाच्या नोंदी',expensesH.length]
+    ];
+    const ws=XLSX.utils.aoa_to_sheet(dashboard);
+    ws['!cols']=[{wch:38},{wch:22}];
+    XLSX.utils.book_append_sheet(wb,ws,'Dashboard');
+
+    const wm=XLSX.utils.json_to_sheet(membersH.map((x,i)=>({
+      'क्रमांक':i+1,'सभासदाचे नाव':x.name||'','वर्गणी':Number(x.amount||0),
+      'जमा':Number(x.paid||0),'बाकी':Math.max(0,Number(x.amount||0)-Number(x.paid||0))
+    })));
+    wm['!cols']=[{wch:10},{wch:30},{wch:16},{wch:16},{wch:16}];
+    XLSX.utils.book_append_sheet(wb,wm,'सभासद वर्गणी');
+
+    const wo=XLSX.utils.json_to_sheet(outsideH.map((x,i)=>({
+      'क्रमांक':i+1,'नाव':x.name||'','रक्कम':Number(x.amount||0),'तारीख':x.date||'','नोंद':x.note||''
+    })));
+    wo['!cols']=[{wch:10},{wch:30},{wch:16},{wch:16},{wch:38}];
+    XLSX.utils.book_append_sheet(wb,wo,'बाहेरील वर्गणी');
+
+    const we=XLSX.utils.json_to_sheet(expensesH.map((x,i)=>({
+      'क्रमांक':i+1,'खर्चाचे वर्णन':x.name||'','रक्कम':Number(x.amount||0),'तारीख':x.date||'','नोंद':x.note||''
+    })));
+    we['!cols']=[{wch:10},{wch:34},{wch:16},{wch:16},{wch:38}];
+    XLSX.utils.book_append_sheet(wb,we,'खर्च');
+
+    const ledger=[
+      ['प्रकार','नाव / वर्णन','रक्कम','तारीख','नोंद'],
+      ...membersH.filter(x=>Number(x.paid||0)>0).map(x=>['जमा - सदस्य वर्गणी',x.name,Number(x.paid||0),'','']),
+      ...outsideH.map(x=>['जमा - बाहेरील वर्गणी',x.name,Number(x.amount||0),x.date||'',x.note||'']),
+      ...expensesH.map(x=>['खर्च',x.name,-Number(x.amount||0),x.date||'',x.note||''])
+    ];
+    const wl=XLSX.utils.aoa_to_sheet(ledger);
+    wl['!cols']=[{wch:25},{wch:32},{wch:16},{wch:16},{wch:38}];
+    XLSX.utils.book_append_sheet(wb,wl,'संपूर्ण हिशोब');
+
+    XLSX.writeFile(wb,'Ek_Sangh_Tarun_Mandal_Hishob_2026.xlsx');
+  };
  renderH();
 })();
 </script>
