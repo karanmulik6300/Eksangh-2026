@@ -381,7 +381,7 @@ load();
 </script>
 <script>
 const MEMBER_STORAGE_KEY='ek_sangh_members_2026_v3_blank';
-const seedMembers=[];
+const seedMembers=[{id:'m1',name:'दिलीप मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m2',name:'विकास पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m3',name:'संतोष पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m4',name:'विजय मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m5',name:'संतोष मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m6',name:'बालाजी पाढंरे',amount:0,paid:0,status:'due',treasurer:''},{id:'m7',name:'विजय मुळीक (बबलु)',amount:0,paid:0,status:'due',treasurer:''},{id:'m8',name:'राहुल मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m9',name:'अक्षय मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m10',name:'लोखंडे सर',amount:0,paid:0,status:'due',treasurer:''},{id:'m11',name:'सौरभ मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m12',name:'रेहाण मणेर',amount:0,paid:0,status:'due',treasurer:''},{id:'m13',name:'शिवराज पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m14',name:'संजय पाटील(टेलर)',amount:0,paid:0,status:'due',treasurer:''},{id:'m15',name:'सतिश पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m16',name:'प्रणव मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m17',name:'स्वप्निल मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m18',name:'प्रकाश मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m19',name:'विकी मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m20',name:'करण मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m21',name:'साईराज मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m22',name:'दिपक मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m23',name:'तानाजी मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m24',name:'सचिन मुळीक',amount:0,paid:0,status:'due',treasurer:''}];
 let memberEditId=null;
 function getMembers(){try{const x=JSON.parse(localStorage.getItem(MEMBER_STORAGE_KEY));if(Array.isArray(x)&&x.length)return x}catch(e){}return seedMembers.map(x=>({...x}))}
 let members=getMembers();
@@ -435,24 +435,23 @@ function renderMembers(){
  $('memberList').innerHTML=f.map(m=>{
    const due=Math.max(0,Number(m.amount||0)-Number(m.paid||0));
    const tr=memberTreasurer(m);
-   const ledgerRows=memberLedgerRows(m);
-   const hasLedger=ledgerRows.length>0;
-   const trLabel=tr?(tr==="Karan"?"करण":tr==="Dipak"?"दिपक":tr):"नोंद नाही";
+   const trLabel=tr?(tr==='Karan'?'करण':tr==='Dipak'?'दिपक':tr):'नोंद नाही';
    return `<div class="member-row">
      <div class="member-no">${members.indexOf(m)+1}</div>
-     <div>
-       <div class="member-name">${esc(m.name)}</div>
-       <div class="member-sub">वर्गणी: ${memberMoney(m.amount)} • ${due?'बाकी: '+memberMoney(due):'पूर्ण जमा'} • खजिनदार: ${esc(trLabel)}</div>
-     </div>
-     <div class="member-paid">
-       <div>${memberMoney(m.paid)}</div>
-       <span class="member-status ${m.status}">${m.status==='paid'?'✓ जमा':'बाकी'}</span>
-       ${Number(m.paid||0)>0?(hasLedger?'<div class="small ok" style="display:inline-block;margin-top:4px;padding:3px 6px;border-radius:7px">✓ नोंदवहीत</div>':`<button class="member-edit" style="margin-top:5px" type="button" onclick="syncMemberToLedger('${m.id}')">📒 नोंदवहीत जमा करा</button>`):''}
+     <div><div class="member-name">${esc(m.name)}</div><div class="member-sub">खजिनदार: ${esc(trLabel)} • ${due?'बाकी: '+memberMoney(due):'पूर्ण जमा'}</div></div>
+     <div class="member-paid" style="min-width:190px">
+       <input type="number" min="0" value="${Number(m.paid||0)||''}" placeholder="वर्गणी रक्कम" style="width:135px;padding:9px" onchange="updateMemberAmount('${m.id}',this.value)">
+       <span class="member-status ${m.status}" style="margin-left:4px">${m.status==='paid'?'✓ जमा':'बाकी'}</span>
      </div>
      <button class="member-edit" type="button" onclick="editMember('${m.id}')">✏️ Edit</button>
    </div>`
  }).join('')||'<div class="member-empty">या filter मध्ये सदस्य नाही.</div>'
 }
+window.updateMemberAmount=function(id,val){
+ const m=members.find(x=>x.id===id); if(!m)return;
+ const n=Number(val||0); if(!Number.isFinite(n)||n<0){alert('योग्य रक्कम द्या.');renderMembers();return}
+ m.paid=n; m.amount=n; m.status=n>0?'paid':'due'; saveMembers(); renderMembers();
+};
 function editMember(id){
  const m=members.find(x=>x.id===id);if(!m)return;
  memberEditId=id;$('memberEditName').value=m.name;$('memberEditAmount').value=m.amount;$('memberEditPaid').value=m.paid;
