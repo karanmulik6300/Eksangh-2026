@@ -325,14 +325,20 @@ async function add(obj){
  if(!editor){alert("Treasurer login आवश्यक आहे.");return}
  const {data:{session}}=await db.auth.getSession();
  if(!session){setEditor(false);alert("Session expired. पुन्हा login करा.");return}
- const {error}=await db.from("transactions").insert([{...obj,mandal_id:MANDAL_ID}]);
+ const {data,error}=await db.rpc("ek_sangh_save_transaction",{
+   p_id:null,p_type:obj.type||null,p_donor_name:obj.donor_name||null,p_description:obj.description||null,
+   p_amount:Number(obj.amount||0),p_transaction_date:obj.transaction_date||today,p_payment_mode:obj.payment_mode||"Cash",
+   p_category:obj.category||null,p_receipt_no:obj.receipt_no||null,p_mobile_note:obj.mobile_note||null,
+   p_vendor:obj.vendor||null,p_bill_no_note:obj.bill_no_note||null,p_other_category:obj.other_category||null,
+   p_treasurer:obj.treasurer||"Karan"
+ });
  if(error){alert("Save failed: "+error.message);return}
  await load(); alert("Save झाले.");
 }
 
 async function delRow(id){
  if(!editor||!confirm("हा व्यवहार delete करायचा आहे का?"))return;
- const {error}=await db.from("transactions").delete().eq("id",id).eq("mandal_id",MANDAL_ID);
+ const {data,error}=await db.rpc("ek_sangh_delete_transaction",{p_id:id});
  if(error){alert("Delete failed: "+error.message);return}
  await load();
 }
@@ -406,25 +412,15 @@ async function syncMemberToLedger(id){
  const treasurer=memberTreasurer(m);
  if(!treasurer){alert("आधी या सदस्याकडून वर्गणी कोणाकडे जमा झाली ते खजिनदारमध्ये निवडा.");return}
  const existing=memberLedgerRows(m);
- if(existing.length){
-   const target=existing[0];
-   const {error}=await db.from("transactions").update({
-     amount:paid,
-     treasurer:treasurer,
-     category:"सदस्य वर्गणी"
-   }).eq("id",target.id).eq("mandal_id",MANDAL_ID);
-   if(error){alert("नोंदवही अपडेट झाली नाही: "+error.message);return}
- }else{
-   const {error}=await db.from("transactions").insert([{
-     mandal_id:MANDAL_ID,type:"in",donor_name:m.name,amount:paid,
-     transaction_date:today,payment_mode:"Cash",category:"सदस्य वर्गणी",
-     treasurer:treasurer,mobile_note:"सदस्यांची वर्गणी"
-   }]);
-   if(error){alert("नोंदवहीत नोंद झाली नाही: "+error.message);return}
- }
- await load();
- alert("वर्गणी हिशोब नोंदवहीत नोंदवली आहे.");
- renderMembers();
+ const target=existing[0];
+ const payload={
+   p_id:target?.id||null,p_type:"in",p_donor_name:m.name,p_description:null,p_amount:paid,
+   p_transaction_date:today,p_payment_mode:"Cash",p_category:"सदस्य वर्गणी",p_receipt_no:null,
+   p_mobile_note:"सदस्यांची वर्गणी",p_vendor:null,p_bill_no_note:null,p_other_category:null,p_treasurer:treasurer
+ };
+ const {error}=await db.rpc("ek_sangh_save_transaction",payload);
+ if(error){alert("नोंदवहीत नोंद झाली नाही: "+error.message);return}
+ await load(); alert("वर्गणी हिशोब नोंदवहीत नोंदवली आहे."); renderMembers();
 }
 window.syncMemberToLedger=syncMemberToLedger;
 function renderMembers(){
