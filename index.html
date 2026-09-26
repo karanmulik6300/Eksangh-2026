@@ -78,6 +78,9 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 @media(max-width:700px){#hishob .hstat-grid{grid-template-columns:1fr 1fr}#hishob .hform{grid-template-columns:1fr}.hfull{grid-column:auto}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+.home-welcome{background:linear-gradient(135deg,#faf5ff,#ffffff);border-color:#ddd6fe;padding:22px}.home-kicker{color:#6d28d9;font-weight:900;font-size:14px}.home-welcome h2{margin:6px 0 4px;font-size:27px}.home-welcome p{margin:0;color:#666;line-height:1.55}.home-stats{margin-top:14px}.home-ledger{margin-top:2px}.empty-home{text-align:center;padding:22px 10px;color:#777;background:#fafafa;border-radius:12px;border:1px dashed #ddd}.home-welcome .actions{margin-top:16px}.home-welcome button{min-height:44px}@media(max-width:700px){.home-welcome h2{font-size:23px}.home-stats{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
 <header class="header">
@@ -122,7 +125,18 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
  <button class="tab editor hidden" data-tab="expense" type="button">💸 खर्च</button>
 </div>
 
-<section id="home" class="page"><div class="cols"><div class="card"><div class="listhead"><h2>💰 जमा झालेली रक्कम</h2><b class="green" id="incomeTotal">₹0</b></div><div id="incomeList"></div></div><div class="card"><div class="listhead"><h2>💸 खर्चाची यादी</h2><b class="red" id="expenseTotal">₹0</b></div><div id="expenseList"></div></div></div></section>
+<section id="home" class="page">
+<div class="card home-welcome"><div class="home-kicker">🪔 गणेशोत्सव २०२६</div><h2>एक संघ तरुण मंडळ</h2><p>हिशोबाची पारदर्शक माहिती येथे पाहता येईल. सध्या नवीन वर्षाचा हिशोब रिकामा आहे.</p><div class="actions"><button class="primary" type="button" onclick="showTab('hishob')">📊 संपूर्ण हिशोब पाहा</button><button type="button" onclick="document.getElementById('hExcel').click()">📥 Excel Download</button></div></div>
+<div class="grid home-stats">
+ <div class="card stat"><div class="label">मागील शिल्लक</div><div class="value purple" id="homePrev">₹0</div></div>
+ <div class="card stat"><div class="label">सभासद वर्गणी</div><div class="value green" id="homeMember">₹0</div></div>
+ <div class="card stat"><div class="label">बाहेरील वर्गणी</div><div class="value green" id="homeOutside">₹0</div></div>
+ <div class="card stat"><div class="label">एकूण खर्च</div><div class="value red" id="homeExpense">₹0</div></div>
+ <div class="card stat"><div class="label">एकूण जमा</div><div class="value green" id="homeCollected">₹0</div></div>
+ <div class="card stat"><div class="label">अंतिम शिल्लक</div><div class="value purple" id="homeBalance">₹0</div></div>
+</div>
+<div class="ledger-grid home-ledger"><div class="card"><div class="ledger-head"><h2>👥 सभासद वर्गणी</h2><b class="green" id="homeMemberCount">0 नोंदी</b></div><div id="homeMemberList" class="empty-home">अजून कोणतीही सभासद वर्गणी नोंदवलेली नाही.</div></div><div class="card"><div class="ledger-head"><h2>🎁 बाहेरील वर्गणी</h2><b class="green" id="homeOutsideCount">0 नोंदी</b></div><div id="homeOutsideList" class="empty-home">अजून कोणतीही बाहेरील वर्गणी नोंदवलेली नाही.</div></div><div class="card"><div class="ledger-head"><h2>💸 खर्च</h2><b class="red" id="homeExpenseCount">0 नोंदी</b></div><div id="homeExpenseList" class="empty-home">अजून कोणताही खर्च नोंदवलेला नाही.</div></div></div>
+</section>
 
 <section id="ledger" class="page hidden"><div class="card"><div class="bar"><h2 style="margin:0">📒 हिशोब नोंदवही</h2><span class="sectiontag">● Live</span></div><input id="search" placeholder="देणगीदार / खर्च / category शोधा">
 <div class="filter-title">🔎 व्यवहार Filter करा</div><div class="filters">
@@ -200,7 +214,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 const SUPABASE_URL="https://ddreocceewjmfdaltlun.supabase.co";
 const SUPABASE_KEY="sb_publishable_RJLtktd30k1cJyhHnEH3oQ_jZLMZkX-";
 const EDITOR_EMAIL="karanmulik6300@gmail.com";
-const MANDAL_ID="ek-sangh-2026";
+const MANDAL_ID="ek-sangh-2026-empty-v1";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
 let rows=[], editor=false;
 const $=id=>document.getElementById(id);
@@ -360,13 +374,13 @@ db.auth.onAuthStateChange((_event,session)=>{
 });
 
 db.channel("transactions-live")
- .on("postgres_changes",{event:"*",schema:"public",table:"transactions",filter:"mandal_id=eq.ek-sangh-2026"},()=>load())
+ .on("postgres_changes",{event:"*",schema:"public",table:"transactions",filter:"mandal_id=eq.ek-sangh-2026-empty-v1"},()=>load())
  .subscribe();
 
 load();
 </script>
 <script>
-const MEMBER_STORAGE_KEY='ek_sangh_members_2026_v2_empty';
+const MEMBER_STORAGE_KEY='ek_sangh_members_2026_v3_blank';
 const seedMembers=[];
 let memberEditId=null;
 function getMembers(){try{const x=JSON.parse(localStorage.getItem(MEMBER_STORAGE_KEY));if(Array.isArray(x)&&x.length)return x}catch(e){}return seedMembers.map(x=>({...x}))}
@@ -466,14 +480,17 @@ renderMembers();
 </script>
 <script id="hishob-module-js">
 (function(){
- const K={prev:'ek_sangh_hishob_prev_2026_v2_empty',mem:'ek_sangh_hishob_members_2026_v2_empty',out:'ek_sangh_hishob_outside_2026_v2_empty',exp:'ek_sangh_hishob_expenses_2026_v2_empty',init:'ek_sangh_hishob_init_2026_v2_empty'};
+ const K={prev:'ek_sangh_hishob_prev_2026_v3_blank',mem:'ek_sangh_hishob_members_2026_v3_blank',out:'ek_sangh_hishob_outside_2026_v3_blank',exp:'ek_sangh_hishob_expenses_2026_v3_blank',init:'ek_sangh_hishob_init_2026_v3_blank'};
  const H=id=>document.getElementById(id); const hm=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
  const get=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k));return x??d}catch(e){return d}}; const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
  let prev=Number(get(K.prev,0)||0), membersH=get(K.mem,null), outsideH=get(K.out,[]), expensesH=get(K.exp,[]);
+ // Blank template: no sample records are inserted. Existing records entered by the user remain intact.
  if(!Array.isArray(membersH)){membersH=[];put(K.mem,membersH)}
  function canEdit(){if(typeof editor!=='undefined'&&editor)return true;alert('खजिनदार Login आवश्यक आहे.');return false}
  function renderH(){
   const mt=membersH.reduce((a,x)=>a+Number(x.paid||0),0), ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0), et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0), collected=mt+ot, bal=prev+collected-et;
+  const setHome=(id,val)=>{const e=H(id);if(e)e.textContent=val}; setHome('homePrev',hm(prev));setHome('homeMember',hm(mt));setHome('homeOutside',hm(ot));setHome('homeExpense',hm(et));setHome('homeCollected',hm(collected));setHome('homeBalance',hm(bal)); setHome('homeMemberCount',membersH.length+' नोंदी');setHome('homeOutsideCount',outsideH.length+' नोंदी');setHome('homeExpenseCount',expensesH.length+' नोंदी');
+  const empty='अजून कोणतीही नोंद उपलब्ध नाही.'; const hmRows=membersH.slice(0,5).map(m=>`<div class="hrow"><div><div class="hname">${escH(m.name)}</div><div class="hsub">जमा: ${hm(m.paid)}</div></div><b class="hamt hpositive">${hm(m.paid)}</b></div>`).join(''); const hoRows=outsideH.slice(0,5).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">${escH(x.date||'')}</div></div><b class="hamt hpositive">${hm(x.amount)}</b></div>`).join(''); const heRows=expensesH.slice(0,5).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">${escH(x.date||'')}</div></div><b class="hamt hnegative">− ${hm(x.amount)}</b></div>`).join(''); const e1=H('homeMemberList'),e2=H('homeOutsideList'),e3=H('homeExpenseList'); if(e1)e1.innerHTML=hmRows||empty; if(e2)e2.innerHTML=hoRows||empty; if(e3)e3.innerHTML=heRows||empty;
   H('hmPrev').textContent=hm(prev);H('hPrevSmall').textContent=hm(prev);H('hmMember').textContent=hm(mt);H('hmOutside').textContent=hm(ot);H('hmCollected').textContent=hm(collected);H('hmExpense').textContent=hm(et);H('hmBalance').textContent=hm(bal);H('hMemberTotal').textContent=hm(mt);H('hOutsideTotal').textContent=hm(ot);H('hExpenseTotal').textContent=hm(et);H('hPrevInput').value=prev||'';
   H('hMemberList').innerHTML=membersH.map((m,i)=>`<div class="hrow"><div><div class="hname">${escH(m.name)}</div><div class="hsub">वर्गणी: ${hm(m.amount)} • जमा: ${hm(m.paid)} • बाकी: ${hm(Math.max(0,Number(m.amount||0)-Number(m.paid||0)))}</div></div><div><b class="hamt hpositive">${hm(m.paid)}</b>${typeof editor!=='undefined'&&editor?`<div><button type="button" onclick="window.hEditMember('${m.id}')">✏️ Edit</button></div>`:''}</div></div>`).join('')||'<div class="hmuted">सदस्यांची नोंद उपलब्ध नाही.</div>';
   H('hOutsideList').innerHTML=outsideH.map((x,i)=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">${escH(x.date||'')}${x.note?' • '+escH(x.note):''}</div></div><div><b class="hamt hpositive">${hm(x.amount)}</b>${typeof editor!=='undefined'&&editor?`<div><button type="button" onclick="window.hDelOutside(${i})">🗑️</button></div>`:''}</div></div>`).join('')||'<div class="hmuted">बाहेरील / गावातील वर्गणीची नोंद नाही.</div>';
