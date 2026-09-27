@@ -190,7 +190,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 <div class="member-tools"><input id="memberSearch" placeholder="🔎 सदस्याचे नाव शोधा"><select id="memberStatusFilter"><option value="">सर्व</option><option value="paid">जमा</option><option value="due">बाकी</option></select><button class="primary" id="addMemberBtn" type="button">➕ नवीन सदस्य</button></div>
 <div id="memberList" class="member-list"></div>
 <div id="memberEditorBox" class="member-edit-box hidden"><div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="memberEditName"></div><div><label>वर्गणी रक्कम *</label><input id="memberEditAmount" type="number" min="0"></div><div><label>जमा रक्कम</label><input id="memberEditPaid" type="number" min="0"></div><div><label>स्थिती</label><select id="memberEditStatus"><option value="due">बाकी</option><option value="paid">जमा</option></select></div></div><div class="actions"><button class="primary" id="saveMemberEdit" type="button">💾 Save</button><button id="cancelMemberEdit" type="button">रद्द करा</button></div></div>
-<div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="mname"></div><div><label>वर्गणी रक्कम *</label><input id="mamount" type="number" min="1"></div><div><label>तारीख</label><input id="mdate" type="date"></div><div><label>पेमेंट पद्धत</label><select id="mmode"><option>Cash</option><option>UPI</option><option>Bank</option><option>Cheque</option></select></div><div><label>पावती क्रमांक</label><input id="mreceipt"></div><div><label>नोंद</label><input id="mnote"></div></div><div class="actions"><button class="primary" id="saveMember" type="button">➕ वर्गणी Save</button></div></div></section>
+<div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="mname"></div><div><label>वर्गणी रक्कम *</label><input id="mamount" type="number" min="1"></div><div><label>तारीख</label><input id="mdate" type="date"></div><div><label>पेमेंट पद्धत</label><select id="mmode"><option>Cash</option><option>UPI</option><option>Bank</option><option>Cheque</option></select></div><div><label>पावती क्रमांक</label><input id="mreceipt"></div><div><label>नोंद</label><input id="mnote"></div></div><div class="actions"><button class="primary" id="saveMember" type="button">➕ वर्गणी Save</button></div></div></section><div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="mname"></div><div><label>वर्गणी रक्कम *</label><input id="mamount" type="number" min="1"></div><div><label>तारीख</label><input id="mdate" type="date"></div><div><label>पेमेंट पद्धत</label><select id="mmode"><option>Cash</option><option>UPI</option><option>Bank</option><option>Cheque</option></select></div><div><label>पावती क्रमांक</label><input id="mreceipt"></div><div><label>नोंद</label><input id="mnote"></div></div><div class="actions"><button class="primary" id="saveMember" type="button">➕ वर्गणी Save</button></div></div></section>
 
 <section id="donation" class="page hidden editor"><div class="card">
 <h2>💰 देणगी नोंदवा</h2><div class="formgrid">
@@ -214,7 +214,7 @@ const SUPABASE_KEY="sb_publishable_RJLtktd30k1cJyhHnEH3oQ_jZLMZkX-";
 const EDITOR_EMAIL="karanmulik6300@gmail.com";
 const MANDAL_ID="ek-sangh-2026";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
-let rows=[], editor=false; window.rows=rows;
+let rows=[], editor=false; window.rows=rows; window.__previousYearBalance=0;
 const $=id=>document.getElementById(id);
 const today=new Date().toLocaleDateString("en-CA");
 $("ddate").value=today;$("mdate").value=today;$("edate").value=today;
@@ -244,7 +244,7 @@ function item(x){
 function render(){
  const allInc=rows.filter(x=>x.type==="in"),allOut=rows.filter(x=>x.type==="out");
  const totalIn=allInc.reduce((a,x)=>a+Number(x.amount||0),0),totalOut=allOut.reduce((a,x)=>a+Number(x.amount||0),0);
- const previous=Number(typeof prev!=="undefined"?prev:0);
+ const previous=Number(window.__previousYearBalance||0);
  const finalBalance=previous+totalIn-totalOut;
  $("tin").textContent=money(totalIn);$("tout").textContent=money(totalOut);$("bal").textContent=money(finalBalance);$("cnt").textContent=rows.length;
  if($("prevTop")) $("prevTop").textContent=money(previous);
@@ -479,7 +479,7 @@ renderMembers();
  const H=id=>document.getElementById(id);
  const hm=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
  const escH=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- let prev=0;
+ let prev=Number(window.__previousYearBalance||0);
 
  function cloudRows(){ return Array.isArray(window.rows)?window.rows:[]; }
  function memberRows(){ return cloudRows().filter(x=>x.type==='in' && x.category==='सदस्य वर्गणी'); }
@@ -491,8 +491,8 @@ renderMembers();
   const mt=mem.reduce((a,x)=>a+Number(x.amount||0),0);
   const ot=out.reduce((a,x)=>a+Number(x.amount||0),0);
   const et=exp.reduce((a,x)=>a+Number(x.amount||0),0);
-  const collected=mt+ot, bal=prev+collected-et;
-  ['hmPrev','hPrevSmall'].forEach(id=>{if(H(id))H(id).textContent=hm(prev)});
+  const previousBalance=Number(window.__previousYearBalance||prev||0); prev=previousBalance; const collected=mt+ot, bal=previousBalance+collected-et;
+  ['hmPrev','hPrevSmall'].forEach(id=>{if(H(id))H(id).textContent=hm(previousBalance)});
   if(H('hmMember'))H('hmMember').textContent=hm(mt);
   if(H('hmOutside'))H('hmOutside').textContent=hm(ot);
   if(H('hmCollected'))H('hmCollected').textContent=hm(collected);
@@ -501,7 +501,7 @@ renderMembers();
   if(H('hMemberTotal'))H('hMemberTotal').textContent=hm(mt);
   if(H('hOutsideTotal'))H('hOutsideTotal').textContent=hm(ot);
   if(H('hExpenseTotal'))H('hExpenseTotal').textContent=hm(et);
-  if(H('hPrevInput'))H('hPrevInput').value=prev||''; if(H('homePrevInput'))H('homePrevInput').value=prev||'';
+  if(H('hPrevInput'))H('hPrevInput').value=previousBalance||''; if(H('homePrevInput'))H('homePrevInput').value=previousBalance||'';
 
   const sorted=a=>[...a].sort((x,y)=>String(y.transaction_date||'').localeCompare(String(x.transaction_date||'')));
   if(H('hMemberList')) H('hMemberList').innerHTML=sorted(mem).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.donor_name||'नाव नाही')}</div><div class="hsub">👥 सदस्य वर्गणी • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.mobile_note?`<div class="hsub">📝 ${escH(x.mobile_note)}</div>`:''}</div><div><b class="hamt hpositive">${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">सभासद वर्गणीची नोंद उपलब्ध नाही.</div>';
@@ -513,7 +513,7 @@ renderMembers();
 
  async function loadPreviousBalance(){
    const {data,error}=await db.from('hisab_settings_2026').select('previous_year_balance').eq('id',1).maybeSingle();
-   if(!error && data) prev=Number(data.previous_year_balance||0);
+   if(!error && data){ prev=Number(data.previous_year_balance||0); window.__previousYearBalance=prev; }
    if(H('homePrevBalance')) H('homePrevBalance').textContent=hm(prev);
    if(H('prevTop')) H('prevTop').textContent=hm(prev);
    render();
@@ -525,7 +525,7 @@ renderMembers();
    if(!Number.isFinite(n)||n<0){alert('योग्य शिल्लक द्या.');return;}
    const {data,error}=await db.rpc('ek_sangh_set_previous_balance',{p_amount:n});
    if(error){alert('Save failed: '+error.message);return;}
-   prev=Number(data||n);
+   prev=Number(data||n); window.__previousYearBalance=prev;
    if(H('homePrevBalance')) H('homePrevBalance').textContent=hm(prev);
    if(H('prevTop')) H('prevTop').textContent=hm(prev);
    if(H('hPrevInput')) H('hPrevInput').value=prev||'';
