@@ -123,7 +123,18 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
  <button class="tab editor hidden" data-tab="expense" type="button">💸 खर्च</button>
 </div>
 
-<section id="home" class="page"><div class="cols"><div class="card"><div class="listhead"><h2>💰 जमा झालेली रक्कम</h2><b class="green" id="incomeTotal">₹0</b></div><div id="incomeList"></div></div><div class="card"><div class="listhead"><h2>💸 खर्चाची यादी</h2><b class="red" id="expenseTotal">₹0</b></div><div id="expenseList"></div></div></div><div class="card" style="margin-top:16px"><div class="listhead"><h2>💼 मागील वर्षाची शिल्लक</h2><b class="purple" id="homePrevBalance">₹0</b></div><div class="muted">ही रक्कम आता एकूण शिल्लकमध्ये आपोआप जोडली जाते.</div></div></section>
+<section id="home" class="page">
+<div class="cols"><div class="card"><div class="listhead"><h2>💰 जमा झालेली रक्कम</h2><b class="green" id="incomeTotal">₹0</b></div><div id="incomeList"></div></div><div class="card"><div class="listhead"><h2>💸 खर्चाची यादी</h2><b class="red" id="expenseTotal">₹0</b></div><div id="expenseList"></div></div></div>
+<div class="card" style="margin-top:16px">
+ <div class="listhead"><h2>💼 मागील वर्षाची शिल्लक</h2><b class="purple" id="homePrevBalance">₹0</b></div>
+ <div class="muted" style="margin-bottom:12px">ही रक्कम एकूण शिल्लकमध्ये थेट जोडली जाईल.</div>
+ <div class="formgrid">
+  <div><label>मागील वर्षाची शिल्लक</label><input id="homePrevInput" type="number" min="0" placeholder="उदा. 10000"></div>
+  <div class="actions" style="align-items:end"><button class="primary" id="homePrevSave" type="button">💾 मागील शिल्लक Save</button></div>
+ </div>
+ <div class="notice" style="margin-top:12px">🧮 एकूण शिल्लक = मागील वर्षाची शिल्लक + एकूण जमा − एकूण खर्च</div>
+</div>
+</section>
 
 <section id="ledger" class="page hidden"><div class="card"><div class="bar"><h2 style="margin:0">📒 हिशोब नोंदवही</h2><span class="sectiontag">● Live</span></div><input id="search" placeholder="देणगीदार / खर्च / category शोधा">
 <div class="filter-title">🔎 व्यवहार Filter करा</div><div class="filters">
@@ -203,7 +214,7 @@ const SUPABASE_KEY="sb_publishable_RJLtktd30k1cJyhHnEH3oQ_jZLMZkX-";
 const EDITOR_EMAIL="karanmulik6300@gmail.com";
 const MANDAL_ID="ek-sangh-2026";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
-let rows=[], editor=false;
+let rows=[], editor=false; window.rows=rows;
 const $=id=>document.getElementById(id);
 const today=new Date().toLocaleDateString("en-CA");
 $("ddate").value=today;$("mdate").value=today;$("edate").value=today;
@@ -263,6 +274,7 @@ async function load(){
     return;
   }
   rows=Array.isArray(data)?data:[];
+  window.rows=rows;
   $("status").textContent="✅ Cloud data live आहे • "+rows.length+" व्यवहार";
   $("status").className="notice ok";
   render();
@@ -489,7 +501,7 @@ renderMembers();
   if(H('hMemberTotal'))H('hMemberTotal').textContent=hm(mt);
   if(H('hOutsideTotal'))H('hOutsideTotal').textContent=hm(ot);
   if(H('hExpenseTotal'))H('hExpenseTotal').textContent=hm(et);
-  if(H('hPrevInput'))H('hPrevInput').value=prev||'';
+  if(H('hPrevInput'))H('hPrevInput').value=prev||''; if(H('homePrevInput'))H('homePrevInput').value=prev||'';
 
   const sorted=a=>[...a].sort((x,y)=>String(y.transaction_date||'').localeCompare(String(x.transaction_date||'')));
   if(H('hMemberList')) H('hMemberList').innerHTML=sorted(mem).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.donor_name||'नाव नाही')}</div><div class="hsub">👥 सदस्य वर्गणी • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.mobile_note?`<div class="hsub">📝 ${escH(x.mobile_note)}</div>`:''}</div><div><b class="hamt hpositive">${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">सभासद वर्गणीची नोंद उपलब्ध नाही.</div>';
@@ -507,19 +519,23 @@ renderMembers();
    render();
    renderH();
  }
- if(H('hPrevSave')) H('hPrevSave').onclick=async()=>{
+ async function savePreviousBalanceFromInput(inputId){
    if(typeof editor!=='undefined'&&!editor){alert('व्यवस्थापक Login आवश्यक आहे.');return;}
-   const n=Number(H('hPrevInput').value||0);
+   const n=Number(H(inputId)?.value||0);
    if(!Number.isFinite(n)||n<0){alert('योग्य शिल्लक द्या.');return;}
    const {data,error}=await db.rpc('ek_sangh_set_previous_balance',{p_amount:n});
    if(error){alert('Save failed: '+error.message);return;}
    prev=Number(data||n);
    if(H('homePrevBalance')) H('homePrevBalance').textContent=hm(prev);
    if(H('prevTop')) H('prevTop').textContent=hm(prev);
+   if(H('hPrevInput')) H('hPrevInput').value=prev||'';
+   if(H('homePrevInput')) H('homePrevInput').value=prev||'';
    render();
    renderH();
    alert('मागील वर्षाची शिल्लक Save झाली.');
- };
+ }
+ if(H('hPrevSave')) H('hPrevSave').onclick=()=>savePreviousBalanceFromInput('hPrevInput');
+ if(H('homePrevSave')) H('homePrevSave').onclick=()=>savePreviousBalanceFromInput('homePrevInput');
  window.loadPreviousBalance=loadPreviousBalance;
 
  // Hishob module's own add buttons now use the same Cloud transactions table as Home and Hishob Nondavahi.
