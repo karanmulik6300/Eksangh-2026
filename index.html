@@ -78,9 +78,6 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 @media(max-width:700px){#hishob .hstat-grid{grid-template-columns:1fr 1fr}#hishob .hform{grid-template-columns:1fr}.hfull{grid-column:auto}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>
-.home-welcome{background:linear-gradient(135deg,#faf5ff,#ffffff);border-color:#ddd6fe;padding:22px}.home-kicker{color:#6d28d9;font-weight:900;font-size:14px}.home-welcome h2{margin:6px 0 4px;font-size:27px}.home-welcome p{margin:0;color:#666;line-height:1.55}.home-stats{margin-top:14px}.home-ledger{margin-top:2px}.empty-home{text-align:center;padding:22px 10px;color:#777;background:#fafafa;border-radius:12px;border:1px dashed #ddd}.home-welcome .actions{margin-top:16px}.home-welcome button{min-height:44px}@media(max-width:700px){.home-welcome h2{font-size:23px}.home-stats{grid-template-columns:1fr 1fr}}
-</style>
 </head>
 <body>
 <header class="header">
@@ -125,18 +122,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
  <button class="tab editor hidden" data-tab="expense" type="button">💸 खर्च</button>
 </div>
 
-<section id="home" class="page">
-<div class="card home-welcome"><div class="home-kicker">🪔 गणेशोत्सव २०२६</div><h2>एक संघ तरुण मंडळ</h2><p>हिशोबाची पारदर्शक माहिती येथे पाहता येईल. सध्या नवीन वर्षाचा हिशोब रिकामा आहे.</p><div class="actions"><button class="primary" type="button" onclick="showTab('hishob')">📊 संपूर्ण हिशोब पाहा</button><button type="button" onclick="document.getElementById('hExcel').click()">📥 Excel Download</button></div></div>
-<div class="grid home-stats">
- <div class="card stat"><div class="label">मागील शिल्लक</div><div class="value purple" id="homePrev">₹0</div></div>
- <div class="card stat"><div class="label">सभासद वर्गणी</div><div class="value green" id="homeMember">₹0</div></div>
- <div class="card stat"><div class="label">बाहेरील वर्गणी</div><div class="value green" id="homeOutside">₹0</div></div>
- <div class="card stat"><div class="label">एकूण खर्च</div><div class="value red" id="homeExpense">₹0</div></div>
- <div class="card stat"><div class="label">एकूण जमा</div><div class="value green" id="homeCollected">₹0</div></div>
- <div class="card stat"><div class="label">अंतिम शिल्लक</div><div class="value purple" id="homeBalance">₹0</div></div>
-</div>
-<div class="ledger-grid home-ledger"><div class="card"><div class="ledger-head"><h2>👥 सभासद वर्गणी</h2><b class="green" id="homeMemberCount">0 नोंदी</b></div><div id="homeMemberList" class="empty-home">अजून कोणतीही सभासद वर्गणी नोंदवलेली नाही.</div></div><div class="card"><div class="ledger-head"><h2>🎁 बाहेरील वर्गणी</h2><b class="green" id="homeOutsideCount">0 नोंदी</b></div><div id="homeOutsideList" class="empty-home">अजून कोणतीही बाहेरील वर्गणी नोंदवलेली नाही.</div></div><div class="card"><div class="ledger-head"><h2>💸 खर्च</h2><b class="red" id="homeExpenseCount">0 नोंदी</b></div><div id="homeExpenseList" class="empty-home">अजून कोणताही खर्च नोंदवलेला नाही.</div></div></div>
-</section>
+<section id="home" class="page"><div class="cols"><div class="card"><div class="listhead"><h2>💰 जमा झालेली रक्कम</h2><b class="green" id="incomeTotal">₹0</b></div><div id="incomeList"></div></div><div class="card"><div class="listhead"><h2>💸 खर्चाची यादी</h2><b class="red" id="expenseTotal">₹0</b></div><div id="expenseList"></div></div></div></section>
 
 <section id="ledger" class="page hidden"><div class="card"><div class="bar"><h2 style="margin:0">📒 हिशोब नोंदवही</h2><span class="sectiontag">● Live</span></div><input id="search" placeholder="देणगीदार / खर्च / category शोधा">
 <div class="filter-title">🔎 व्यवहार Filter करा</div><div class="filters">
@@ -176,7 +162,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
  <div class="hsection">
   <div class="hhead"><h3>⚙️ हिशोब नियंत्रण</h3><button class="primary" id="hExcel" type="button">📥 Download Excel</button></div>
   <div class="hmuted">Edit / Delete करण्यासाठी खजिनदार Login आवश्यक आहे.</div>
-  <div class="notice" style="margin-top:0">ℹ️ हा template पूर्णपणे रिकामा आहे. पुढे तुम्हीच सदस्य, बाहेरील वर्गणी, मागील शिल्लक आणि खर्च भरू शकता.</div>
+  <div class="hactions"><button id="hRefreshSource" type="button">↻ जुन्या file मधून फक्त वर्गणी आणा</button></div>
  </div>
  <div class="hsection" id="hPrevSection">
   <div class="hhead"><h3>💼 मागील वर्षाची शिल्लक</h3><b class="purple" id="hPrevSmall">₹0</b></div>
@@ -214,7 +200,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 const SUPABASE_URL="https://ddreocceewjmfdaltlun.supabase.co";
 const SUPABASE_KEY="sb_publishable_RJLtktd30k1cJyhHnEH3oQ_jZLMZkX-";
 const EDITOR_EMAIL="karanmulik6300@gmail.com";
-const MANDAL_ID="ek-sangh-2026-empty-v1";
+const MANDAL_ID="ek-sangh-2026";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
 let rows=[], editor=false;
 const $=id=>document.getElementById(id);
@@ -278,7 +264,7 @@ async function load(){
   $("status").textContent="✅ Cloud data live आहे • "+rows.length+" व्यवहार";
   $("status").className="notice ok";
   render();
-  if(typeof renderH==='function') renderH();
+  if (typeof window.refreshHishob === "function") window.refreshHishob();
 }
 
 function setEditor(v){
@@ -326,20 +312,14 @@ async function add(obj){
  if(!editor){alert("Treasurer login आवश्यक आहे.");return}
  const {data:{session}}=await db.auth.getSession();
  if(!session){setEditor(false);alert("Session expired. पुन्हा login करा.");return}
- const {data,error}=await db.rpc("ek_sangh_save_transaction_v2",{
-   p_id:null,p_type:obj.type||null,p_donor_name:obj.donor_name||null,p_description:obj.description||null,
-   p_amount:Number(obj.amount||0),p_transaction_date:obj.transaction_date||today,p_payment_mode:obj.payment_mode||"Cash",
-   p_category:obj.category||null,p_receipt_no:obj.receipt_no||null,p_mobile_note:obj.mobile_note||null,
-   p_vendor:obj.vendor||null,p_bill_no_note:obj.bill_no_note||null,p_other_category:obj.other_category||null,
-   p_treasurer:obj.treasurer||"Karan"
- });
+ const {error}=await db.from("transactions").insert([{...obj,mandal_id:MANDAL_ID}]);
  if(error){alert("Save failed: "+error.message);return}
  await load(); alert("Save झाले.");
 }
 
 async function delRow(id){
  if(!editor||!confirm("हा व्यवहार delete करायचा आहे का?"))return;
- const {data,error}=await db.rpc("ek_sangh_delete_transaction_v2",{p_id:id});
+ const {error}=await db.from("transactions").delete().eq("id",id).eq("mandal_id",MANDAL_ID);
  if(error){alert("Delete failed: "+error.message);return}
  await load();
 }
@@ -381,14 +361,16 @@ db.auth.onAuthStateChange((_event,session)=>{
 });
 
 db.channel("transactions-live")
- .on("postgres_changes",{event:"*",schema:"public",table:"transactions",filter:"mandal_id=eq.ek-sangh-2026-empty-v1"},()=>load())
+ .on("postgres_changes",{event:"*",schema:"public",table:"transactions",filter:"mandal_id=eq.ek-sangh-2026"},()=>load())
  .subscribe();
 
 load();
 </script>
 <script>
-const MEMBER_STORAGE_KEY='ek_sangh_members_2026_v3_blank';
-const seedMembers=[{id:'m1',name:'दिलीप मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m2',name:'विकास पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m3',name:'संतोष पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m4',name:'विजय मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m5',name:'संतोष मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m6',name:'बालाजी पाढंरे',amount:0,paid:0,status:'due',treasurer:''},{id:'m7',name:'विजय मुळीक (बबलु)',amount:0,paid:0,status:'due',treasurer:''},{id:'m8',name:'राहुल मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m9',name:'अक्षय मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m10',name:'लोखंडे सर',amount:0,paid:0,status:'due',treasurer:''},{id:'m11',name:'सौरभ मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m12',name:'रेहाण मणेर',amount:0,paid:0,status:'due',treasurer:''},{id:'m13',name:'शिवराज पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m14',name:'संजय पाटील(टेलर)',amount:0,paid:0,status:'due',treasurer:''},{id:'m15',name:'सतिश पाटील',amount:0,paid:0,status:'due',treasurer:''},{id:'m16',name:'प्रणव मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m17',name:'स्वप्निल मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m18',name:'प्रकाश मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m19',name:'विकी मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m20',name:'करण मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m21',name:'साईराज मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m22',name:'दिपक मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m23',name:'तानाजी मुळीक',amount:0,paid:0,status:'due',treasurer:''},{id:'m24',name:'सचिन मुळीक',amount:0,paid:0,status:'due',treasurer:''}];
+const MEMBER_STORAGE_KEY='ek_sangh_members_2026_v1';
+const seedMembers=[
+['दिलीप मुळीक',5001,5001],['विकास पाटील',5000,0],['संतोष पाटील',5000,5000],['विजय मुळीक',5000,5000],['संतोष मुळीक',11000,11000],['बालाजी पाढंरे',5555,5555],['विजय मुळीक (बबलु)',5000,0],['राहुल मुळीक',5000,5000],['अक्षय मुळीक',5000,0],['लोखंडे सर',5000,0],['सौरभ मुळीक',7000,7000],['रेहाण मणेर',5000,0],['शिवराज पाटील',5000,5000],['संजय पाटील(टेलर)',5000,5000],['सतिश पाटील',5001,5001],['प्रणव मुळीक',5000,5000],['स्वप्निल मुळीक',5000,5000],['प्रकाश मुळीक',5000,0],['विकी मुळीक',5000,5000],['करण मुळीक',5000,5000],['साईराज मुळीक',4000,4000],['दिपक मुळीक',7000,7000],['तानाजी मुळीक',1000,1000],['सचिन मुळीक',2000,2000]
+].map((x,i)=>({id:'m'+(i+1),name:x[0],amount:x[1],paid:x[2],status:x[2]>=x[1]?'paid':'due',treasurer:''}));
 let memberEditId=null;
 function getMembers(){try{const x=JSON.parse(localStorage.getItem(MEMBER_STORAGE_KEY));if(Array.isArray(x)&&x.length)return x}catch(e){}return seedMembers.map(x=>({...x}))}
 let members=getMembers();
@@ -413,15 +395,25 @@ async function syncMemberToLedger(id){
  const treasurer=memberTreasurer(m);
  if(!treasurer){alert("आधी या सदस्याकडून वर्गणी कोणाकडे जमा झाली ते खजिनदारमध्ये निवडा.");return}
  const existing=memberLedgerRows(m);
- const target=existing[0];
- const payload={
-   p_id:target?.id||null,p_type:"in",p_donor_name:m.name,p_description:null,p_amount:paid,
-   p_transaction_date:today,p_payment_mode:"Cash",p_category:"सदस्य वर्गणी",p_receipt_no:null,
-   p_mobile_note:"सदस्यांची वर्गणी",p_vendor:null,p_bill_no_note:null,p_other_category:null,p_treasurer:treasurer
- };
- const {error}=await db.rpc("ek_sangh_save_transaction_v2",payload);
- if(error){alert("नोंदवहीत नोंद झाली नाही: "+error.message);return}
- await load(); alert("वर्गणी हिशोब नोंदवहीत नोंदवली आहे."); renderMembers();
+ if(existing.length){
+   const target=existing[0];
+   const {error}=await db.from("transactions").update({
+     amount:paid,
+     treasurer:treasurer,
+     category:"सदस्य वर्गणी"
+   }).eq("id",target.id).eq("mandal_id",MANDAL_ID);
+   if(error){alert("नोंदवही अपडेट झाली नाही: "+error.message);return}
+ }else{
+   const {error}=await db.from("transactions").insert([{
+     mandal_id:MANDAL_ID,type:"in",donor_name:m.name,amount:paid,
+     transaction_date:today,payment_mode:"Cash",category:"सदस्य वर्गणी",
+     treasurer:treasurer,mobile_note:"सदस्यांची वर्गणी"
+   }]);
+   if(error){alert("नोंदवहीत नोंद झाली नाही: "+error.message);return}
+ }
+ await load();
+ alert("वर्गणी हिशोब नोंदवहीत नोंदवली आहे.");
+ renderMembers();
 }
 window.syncMemberToLedger=syncMemberToLedger;
 function renderMembers(){
@@ -432,38 +424,24 @@ function renderMembers(){
  $('memberList').innerHTML=f.map(m=>{
    const due=Math.max(0,Number(m.amount||0)-Number(m.paid||0));
    const tr=memberTreasurer(m);
-   const trLabel=tr?(tr==='Karan'?'करण':tr==='Dipak'?'दिपक':tr):'नोंद नाही';
+   const ledgerRows=memberLedgerRows(m);
+   const hasLedger=ledgerRows.length>0;
+   const trLabel=tr?(tr==="Karan"?"करण":tr==="Dipak"?"दिपक":tr):"नोंद नाही";
    return `<div class="member-row">
      <div class="member-no">${members.indexOf(m)+1}</div>
-     <div><div class="member-name">${esc(m.name)}</div><div class="member-sub">खजिनदार: ${esc(trLabel)} • ${due?'बाकी: '+memberMoney(due):'पूर्ण जमा'}</div></div>
-     <div class="member-paid" style="min-width:190px">
-       <input id="paid_${m.id}" type="number" min="0" value="${Number(m.paid||0)||''}" placeholder="वर्गणी रक्कम" style="width:135px;padding:9px" onchange="updateMemberAmount('${m.id}',this.value)">
-       <button class="member-edit" type="button" onclick="saveMemberPayment('${m.id}')">💾 Save</button>
-       <span class="member-status ${m.status}" style="margin-left:4px">${m.status==='paid'?'✓ जमा':'बाकी'}</span>
+     <div>
+       <div class="member-name">${esc(m.name)}</div>
+       <div class="member-sub">वर्गणी: ${memberMoney(m.amount)} • ${due?'बाकी: '+memberMoney(due):'पूर्ण जमा'} • खजिनदार: ${esc(trLabel)}</div>
+     </div>
+     <div class="member-paid">
+       <div>${memberMoney(m.paid)}</div>
+       <span class="member-status ${m.status}">${m.status==='paid'?'✓ जमा':'बाकी'}</span>
+       ${Number(m.paid||0)>0?(hasLedger?'<div class="small ok" style="display:inline-block;margin-top:4px;padding:3px 6px;border-radius:7px">✓ नोंदवहीत</div>':`<button class="member-edit" style="margin-top:5px" type="button" onclick="syncMemberToLedger('${m.id}')">📒 नोंदवहीत जमा करा</button>`):''}
      </div>
      <button class="member-edit" type="button" onclick="editMember('${m.id}')">✏️ Edit</button>
    </div>`
  }).join('')||'<div class="member-empty">या filter मध्ये सदस्य नाही.</div>'
 }
-window.updateMemberAmount=function(id,val){
- const m=members.find(x=>x.id===id); if(!m)return;
- const n=Number(val||0); if(!Number.isFinite(n)||n<0){alert('योग्य रक्कम द्या.');renderMembers();return}
- m.paid=n; if(!Number(m.amount||0)) m.amount=n; m.status=n>0?'paid':'due'; saveMembers(); renderMembers();
-};
-window.saveMemberPayment=async function(id){
- if(!editor){alert('खजिनदार Login आवश्यक आहे.');return}
- const m=members.find(x=>x.id===id); if(!m)return;
- const el=document.getElementById('paid_'+id); const paid=Number(el?.value||0);
- if(!Number.isFinite(paid)||paid<0){alert('योग्य वर्गणी रक्कम द्या.');return}
- if(paid>0 && !m.treasurer){m.treasurer='Karan'}
- m.paid=paid; m.status=paid>0?'paid':'due'; saveMembers();
- const existing=memberLedgerRows(m); const target=existing[0];
- const payload={p_id:target?.id||null,p_type:'in',p_donor_name:m.name,p_description:null,p_amount:paid,p_transaction_date:today,p_payment_mode:'Cash',p_category:'सदस्य वर्गणी',p_receipt_no:null,p_mobile_note:'सदस्यांची वर्गणी',p_vendor:null,p_bill_no_note:null,p_other_category:null,p_treasurer:m.treasurer||'Karan'};
- if(paid===0 && target){ await delRow(target.id); renderMembers(); return; }
- const {error}=await db.rpc('ek_sangh_save_transaction_v2',payload);
- if(error){alert('Save failed: '+error.message);return}
- await load(); renderMembers(); alert('वर्गणी Save झाली.');
-};
 function editMember(id){
  const m=members.find(x=>x.id===id);if(!m)return;
  memberEditId=id;$('memberEditName').value=m.name;$('memberEditAmount').value=m.amount;$('memberEditPaid').value=m.paid;
@@ -474,121 +452,94 @@ window.editMember=editMember;
 $('memberSearch').oninput=renderMembers;$('memberStatusFilter').onchange=renderMembers;
 $('addMemberBtn').onclick=()=>{memberEditId=null;$('memberEditName').value='';$('memberEditAmount').value='5000';$('memberEditPaid').value='0';$('memberEditTreasurer').value='';$('memberEditStatus').value='due';$('memberEditorBox').classList.remove('hidden');$('memberEditName').focus()};
 $('cancelMemberEdit').onclick=()=>{$('memberEditorBox').classList.add('hidden');memberEditId=null};
-async function syncMemberContributionToLedger(member, oldName=''){
- if(!editor) throw new Error('खजिनदार Login आवश्यक आहे.');
- const target=rows.filter(x=>x.type==='in'&&x.category==='सदस्य वर्गणी'&&String(x.donor_name||'').trim()===String(oldName||member.name).trim()).sort((a,b)=>String(b.transaction_date).localeCompare(String(a.transaction_date)))[0];
- const paid=Number(member.paid||0);
- if(paid<=0){ if(target){const {error}=await db.rpc('ek_sangh_delete_transaction_v2',{p_id:target.id}); if(error)throw error;} return; }
- const {error}=await db.rpc('ek_sangh_save_transaction_v2',{p_id:target?.id||null,p_type:'in',p_donor_name:member.name,p_description:null,p_amount:paid,p_transaction_date:member.date||today,p_payment_mode:member.paymentMode||'Cash',p_category:'सदस्य वर्गणी',p_receipt_no:member.receiptNo||null,p_mobile_note:member.note||'सदस्यांची वर्गणी',p_vendor:null,p_bill_no_note:null,p_other_category:null,p_treasurer:member.treasurer||'Karan'});
- if(error)throw error;
-}
 $('saveMemberEdit').onclick=async()=>{
  const name=$('memberEditName').value.trim(),amount=Number($('memberEditAmount').value),paid=Number($('memberEditPaid').value),treasurer=$('memberEditTreasurer').value;
  if(!name||amount<0||paid<0)return alert('नाव आणि योग्य रक्कम भरा.');
  if(paid>amount)return alert('जमा रक्कम वर्गणीपेक्षा जास्त असू शकत नाही.');
- if(!editor)return alert('आधी खजिनदार Login करा.');
- const status=$('memberEditStatus').value; let oldName='',m;
- if(memberEditId){m=members.find(x=>x.id===memberEditId);oldName=m?.name||name;Object.assign(m,{name,amount,paid,status:paid>=amount?'paid':status,treasurer});}
- else{m={id:'m'+Date.now(),name,amount,paid,status:paid>=amount?'paid':status,treasurer};members.push(m);}
- try{await syncMemberContributionToLedger(m,oldName);saveMembers();await load();renderMembers();$('memberEditorBox').classList.add('hidden');memberEditId=null;alert('सदस्याची वर्गणी Home, हिशोब नोंदवही आणि हिशोबमध्ये नोंदवली आहे.');}
- catch(e){alert('वर्गणी Save झाली नाही: '+(e?.message||e));}
+ const status=$('memberEditStatus').value;
+ if(memberEditId){
+   const m=members.find(x=>x.id===memberEditId);
+   Object.assign(m,{name,amount,paid,status:paid>=amount?'paid':status,treasurer});
+ }else{
+   members.push({id:'m'+Date.now(),name,amount,paid,status:paid>=amount?'paid':status,treasurer});
+ }
+ saveMembers();renderMembers();$('memberEditorBox').classList.add('hidden');memberEditId=null;
 };
 renderMembers();
 </script>
 <script id="hishob-module-js">
 (function(){
- const K={prev:'ek_sangh_hishob_prev_2026_v3_blank',mem:'ek_sangh_hishob_members_2026_v3_blank',out:'ek_sangh_hishob_outside_2026_v3_blank',exp:'ek_sangh_hishob_expenses_2026_v3_blank',init:'ek_sangh_hishob_init_2026_v3_blank'};
- const H=id=>document.getElementById(id); const hm=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
- const get=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k));return x??d}catch(e){return d}}; const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
- let prev=Number(get(K.prev,0)||0), membersH=get(K.mem,null), outsideH=get(K.out,[]), expensesH=get(K.exp,[]);
- // Blank template: no sample records are inserted. Existing records entered by the user remain intact.
- if(!Array.isArray(membersH)){membersH=[];put(K.mem,membersH)}
- function canEdit(){if(typeof editor!=='undefined'&&editor)return true;alert('खजिनदार Login आवश्यक आहे.');return false}
+ const H=id=>document.getElementById(id);
+ const hm=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
+ const escH=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const prevKey='ek_sangh_hishob_prev_2026';
+ let prev=Number(localStorage.getItem(prevKey)||0);
+
+ function cloudRows(){ return Array.isArray(window.rows)?window.rows:[]; }
+ function memberRows(){ return cloudRows().filter(x=>x.type==='in' && x.category==='सदस्य वर्गणी'); }
+ function outsideRows(){ return cloudRows().filter(x=>x.type==='in' && x.category!=='सदस्य वर्गणी'); }
+ function expenseRows(){ return cloudRows().filter(x=>x.type==='out'); }
+
  function renderH(){
-  membersH=get(MEMBER_STORAGE_KEY,[]);
-  const memberLedger=rows.filter(x=>x.type==='in'&&x.category==='सदस्य वर्गणी');
-  const paidMap={}; memberLedger.forEach(x=>{const n=String(x.donor_name||'').trim();paidMap[n]=(paidMap[n]||0)+Number(x.amount||0)});
-  const memberView=membersH.map(m=>({...m,paid:paidMap[String(m.name||'').trim()]||0}));
-  const mt=memberView.reduce((a,x)=>a+Number(x.paid||0),0), ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0), et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0), collected=mt+ot, bal=prev+collected-et;
-  const setHome=(id,val)=>{const e=H(id);if(e)e.textContent=val}; setHome('homePrev',hm(prev));setHome('homeMember',hm(mt));setHome('homeOutside',hm(ot));setHome('homeExpense',hm(et));setHome('homeCollected',hm(collected));setHome('homeBalance',hm(bal)); setHome('homeMemberCount',membersH.length+' नोंदी');setHome('homeOutsideCount',outsideH.length+' नोंदी');setHome('homeExpenseCount',expensesH.length+' नोंदी');
-  const empty='अजून कोणतीही नोंद उपलब्ध नाही.'; const hmRows=membersH.slice(0,5).map(m=>`<div class="hrow"><div><div class="hname">${escH(m.name)}</div><div class="hsub">जमा: ${hm(m.paid)}</div></div><b class="hamt hpositive">${hm(m.paid)}</b></div>`).join(''); const hoRows=outsideH.slice(0,5).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">${escH(x.date||'')}</div></div><b class="hamt hpositive">${hm(x.amount)}</b></div>`).join(''); const heRows=expensesH.slice(0,5).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">${escH(x.date||'')}</div></div><b class="hamt hnegative">− ${hm(x.amount)}</b></div>`).join(''); const e1=H('homeMemberList'),e2=H('homeOutsideList'),e3=H('homeExpenseList'); if(e1)e1.innerHTML=hmRows||empty; if(e2)e2.innerHTML=hoRows||empty; if(e3)e3.innerHTML=heRows||empty;
-  H('hmPrev').textContent=hm(prev);H('hPrevSmall').textContent=hm(prev);H('hmMember').textContent=hm(mt);H('hmOutside').textContent=hm(ot);H('hmCollected').textContent=hm(collected);H('hmExpense').textContent=hm(et);H('hmBalance').textContent=hm(bal);H('hMemberTotal').textContent=hm(mt);H('hOutsideTotal').textContent=hm(ot);H('hExpenseTotal').textContent=hm(et);H('hPrevInput').value=prev||'';
-  H('hMemberList').innerHTML=memberView.map((m,i)=>{const due=Math.max(0,Number(m.amount||0)-Number(m.paid||0));const tr=m.treasurer?(m.treasurer==='Karan'?'करण':m.treasurer==='Dipak'?'दिपक':m.treasurer):'नोंद नाही';return `<div class="hrow"><div><div class="hname">${escH(m.name)}</div><div class="hsub">👥 सदस्य वर्गणी • अपेक्षित: ${hm(m.amount)} • जमा: ${hm(m.paid)} • बाकी: ${hm(due)}</div><div class="hsub">खजिनदार: ${escH(tr)}</div></div><div><b class="hamt hpositive">${hm(m.paid)}</b>${typeof editor!=='undefined'&&editor?`<div><button type="button" onclick="window.hEditMember('${m.id}')">✏️ Edit</button></div>`:''}</div></div>`}).join('')||'<div class="hmuted">सदस्यांची नोंद उपलब्ध नाही.</div>';
-  H('hOutsideList').innerHTML=outsideH.map((x,i)=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">🎁 बाहेरील / गावातील वर्गणी • रक्कम: ${hm(x.amount)}</div><div class="hsub">${x.date?'तारीख: '+escH(x.date):''}${x.paymentMode?' • पेमेंट: '+escH(x.paymentMode):''}${x.note?' • नोंद: '+escH(x.note):''}</div></div><div><b class="hamt hpositive">${hm(x.amount)}</b>${typeof editor!=='undefined'&&editor?`<div><button type="button" onclick="window.hDelOutside(${i})">🗑️ Delete</button></div>`:''}</div></div>`).join('')||'<div class="hmuted">बाहेरील / गावातील वर्गणीची नोंद नाही.</div>';
-  H('hExpenseList').innerHTML=expensesH.map((x,i)=>`<div class="hrow"><div><div class="hname">${escH(x.name)}</div><div class="hsub">💸 खर्च • रक्कम: ${hm(x.amount)}</div><div class="hsub">${x.date?'तारीख: '+escH(x.date):''}${x.paymentMode?' • पेमेंट: '+escH(x.paymentMode):''}${x.note?' • नोंद: '+escH(x.note):''}</div></div><div><b class="hamt hnegative">− ${hm(x.amount)}</b>${typeof editor!=='undefined'&&editor?`<div><button class="hdanger" type="button" onclick="window.hDelExpense(${i})">🗑️ Delete</button></div>`:''}</div></div>`).join('')||'<div class="hmuted">नवीन खर्च अजून नोंदवलेला नाही.</div>';
+  const mem=memberRows(), out=outsideRows(), exp=expenseRows();
+  const mt=mem.reduce((a,x)=>a+Number(x.amount||0),0);
+  const ot=out.reduce((a,x)=>a+Number(x.amount||0),0);
+  const et=exp.reduce((a,x)=>a+Number(x.amount||0),0);
+  const collected=mt+ot, bal=prev+collected-et;
+  ['hmPrev','hPrevSmall'].forEach(id=>{if(H(id))H(id).textContent=hm(prev)});
+  if(H('hmMember'))H('hmMember').textContent=hm(mt);
+  if(H('hmOutside'))H('hmOutside').textContent=hm(ot);
+  if(H('hmCollected'))H('hmCollected').textContent=hm(collected);
+  if(H('hmExpense'))H('hmExpense').textContent=hm(et);
+  if(H('hmBalance'))H('hmBalance').textContent=hm(bal);
+  if(H('hMemberTotal'))H('hMemberTotal').textContent=hm(mt);
+  if(H('hOutsideTotal'))H('hOutsideTotal').textContent=hm(ot);
+  if(H('hExpenseTotal'))H('hExpenseTotal').textContent=hm(et);
+  if(H('hPrevInput'))H('hPrevInput').value=prev||'';
+
+  const sorted=a=>[...a].sort((x,y)=>String(y.transaction_date||'').localeCompare(String(x.transaction_date||'')));
+  if(H('hMemberList')) H('hMemberList').innerHTML=sorted(mem).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.donor_name||'नाव नाही')}</div><div class="hsub">👥 सदस्य वर्गणी • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.treasurer?`<div class="hsub">खजिनदार: ${escH(x.treasurer==='Karan'?'करण':x.treasurer==='Dipak'?'दिपक':x.treasurer)}</div>`:''}${x.mobile_note?`<div class="hsub">📝 ${escH(x.mobile_note)}</div>`:''}</div><div><b class="hamt hpositive">${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">सभासद वर्गणीची नोंद उपलब्ध नाही.</div>';
+  if(H('hOutsideList')) H('hOutsideList').innerHTML=sorted(out).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.donor_name||'नाव नाही')}</div><div class="hsub">🎁 बाहेरील / गावातील वर्गणी • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.treasurer?`<div class="hsub">खजिनदार: ${escH(x.treasurer==='Karan'?'करण':x.treasurer==='Dipak'?'दिपक':x.treasurer)}</div>`:''}${x.mobile_note?`<div class="hsub">📝 ${escH(x.mobile_note)}</div>`:''}</div><div><b class="hamt hpositive">${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">बाहेरील / गावातील वर्गणीची नोंद नाही.</div>';
+  if(H('hExpenseList')) H('hExpenseList').innerHTML=sorted(exp).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.description||'खर्च')}</div><div class="hsub">💸 ${escH(x.category||'खर्च')} • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.vendor?`<div class="hsub">Vendor: ${escH(x.vendor)}</div>`:''}${x.bill_no_note?`<div class="hsub">📝 ${escH(x.bill_no_note)}</div>`:''}</div><div><b class="hamt hnegative">− ${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">खर्चाची नोंद उपलब्ध नाही.</div>';
  }
- function escH(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
- window.hEditMember=function(id){if(!canEdit())return;showTab('member');setTimeout(()=>window.editMember(id),50)};
- window.hDelOutside=function(i){if(!canEdit()||!confirm('ही वर्गणी delete करायची का?'))return;outsideH.splice(i,1);put(K.out,outsideH);renderH()};
- window.hDelExpense=function(i){if(!canEdit()||!confirm('हा नवीन खर्च delete करायचा का?'))return;expensesH.splice(i,1);put(K.exp,expensesH);renderH()};
- H('hPrevSave').onclick=()=>{if(!canEdit())return;const n=Number(H('hPrevInput').value||0);if(!Number.isFinite(n)||n<0)return alert('योग्य शिल्लक द्या.');prev=n;put(K.prev,prev);renderH()};
- H('hAddOutside').onclick=()=>{if(!canEdit())return;H('hOutsideForm').classList.remove('hidden');H('hoDate').value=new Date().toLocaleDateString('en-CA')};
- H('hCancelOutside').onclick=()=>H('hOutsideForm').classList.add('hidden');
- H('hSaveOutside').onclick=()=>{if(!canEdit())return;const name=H('hoName').value.trim(),amount=Number(H('hoAmount').value||0);if(!name||amount<=0)return alert('नाव आणि रक्कम भरा.');outsideH.push({id:Date.now(),name,amount,date:H('hoDate').value,note:H('hoNote').value.trim(),paymentMode:''});put(K.out,outsideH);H('hOutsideForm').classList.add('hidden');H('hoName').value='';H('hoAmount').value='';H('hoNote').value='';renderH()};
- H('hAddExpense').onclick=()=>{if(!canEdit())return;H('hExpenseForm').classList.remove('hidden');H('heDate').value=new Date().toLocaleDateString('en-CA')};
- H('hCancelExpense').onclick=()=>H('hExpenseForm').classList.add('hidden');
- H('hSaveExpense').onclick=()=>{if(!canEdit())return;const name=H('heName').value.trim(),amount=Number(H('heAmount').value||0);if(!name||amount<=0)return alert('वर्णन आणि रक्कम भरा.');expensesH.push({id:Date.now(),name,amount,date:H('heDate').value,note:H('heNote').value.trim(),paymentMode:''});put(K.exp,expensesH);H('hExpenseForm').classList.add('hidden');H('heName').value='';H('heAmount').value='';H('heNote').value='';renderH()};
- if(H('hRefreshSource')) H('hRefreshSource').onclick=()=>{if(!canEdit())return;if(!confirm('जुन्या file मधून फक्त जमा वर्गणी पुन्हा आणायची? जुना खर्च आणला जाणार नाही.'))return;const src=(typeof rows!=='undefined'?rows:[]).filter(x=>x.type==='in');const memberMap={};src.filter(x=>x.category==='सदस्य वर्गणी').forEach(x=>{const n=String(x.donor_name||'').trim();if(n)memberMap[n]=(memberMap[n]||0)+Number(x.amount||0)});membersH=membersH.map(m=>({...m,paid:memberMap[m.name]??m.paid}));const outside=src.filter(x=>x.category!=='सदस्य वर्गणी').map(x=>({id:'src_'+x.id,name:x.donor_name||'नाव नाही',amount:Number(x.amount||0),date:x.transaction_date||'',note:x.mobile_note||x.category||''}));outsideH=outside;put(K.mem,membersH);put(K.out,outsideH);renderH();alert('फक्त जमा वर्गणी update केली आहे. जुना खर्च घेतलेला नाही.')};
-  H('hExcel').onclick=()=>{
-    if(typeof XLSX==='undefined'){alert('Excel library load झाली नाही. Internet चालू करून पुन्हा प्रयत्न करा.');return}
-    const mt=membersH.reduce((a,x)=>a+Number(x.paid||0),0);
-    const ot=outsideH.reduce((a,x)=>a+Number(x.amount||0),0);
-    const et=expensesH.reduce((a,x)=>a+Number(x.amount||0),0);
-    const memberExpected=membersH.reduce((a,x)=>a+Number(x.amount||0),0);
-    const balance=prev+mt+ot-et;
-    const wb=XLSX.utils.book_new();
+ window.refreshHishob=renderH;
 
-    const dashboard=[
-      ['एक संघ तरुण मंडळ | गणेशोत्सव २०२६'],
-      ['हिशोब सारांश'],
-      [],
-      ['मागील वर्षाची शिल्लक',prev],
-      ['सदस्यांची अपेक्षित वर्गणी',memberExpected],
-      ['सदस्य वर्गणी जमा',mt],
-      ['बाहेरील / गावातील वर्गणी',ot],
-      ['एकूण जमा',mt+ot],
-      ['एकूण खर्च',et],
-      ['अंतिम शिल्लक',balance],
-      [],
-      ['एकूण सदस्य',membersH.length],
-      ['बाहेरील वर्गणी नोंदी',outsideH.length],
-      ['खर्चाच्या नोंदी',expensesH.length]
-    ];
-    const ws=XLSX.utils.aoa_to_sheet(dashboard);
-    ws['!cols']=[{wch:38},{wch:22}];
-    XLSX.utils.book_append_sheet(wb,ws,'Dashboard');
+ if(H('hPrevSave')) H('hPrevSave').onclick=()=>{
+   if(typeof editor!=='undefined'&&!editor){alert('खजिनदार Login आवश्यक आहे.');return;}
+   const n=Number(H('hPrevInput').value||0); if(!Number.isFinite(n)||n<0){alert('योग्य शिल्लक द्या.');return;}
+   prev=n;localStorage.setItem(prevKey,String(prev));renderH();
+ };
 
-    const wm=XLSX.utils.json_to_sheet(membersH.map((x,i)=>({
-      'क्रमांक':i+1,'सभासदाचे नाव':x.name||'','वर्गणी':Number(x.amount||0),
-      'जमा':Number(x.paid||0),'बाकी':Math.max(0,Number(x.amount||0)-Number(x.paid||0))
-    })));
-    wm['!cols']=[{wch:10},{wch:30},{wch:16},{wch:16},{wch:16}];
-    XLSX.utils.book_append_sheet(wb,wm,'सभासद वर्गणी');
+ // Hishob module's own add buttons now use the same Cloud transactions table as Home and Hishob Nondavahi.
+ if(H('hAddOutside')) H('hAddOutside').onclick=()=>{if(typeof editor!=='undefined'&&!editor){alert('खजिनदार Login आवश्यक आहे.');return;} H('hOutsideForm').classList.remove('hidden'); if(H('hoDate'))H('hoDate').value=new Date().toLocaleDateString('en-CA');};
+ if(H('hCancelOutside')) H('hCancelOutside').onclick=()=>H('hOutsideForm').classList.add('hidden');
+ if(H('hSaveOutside')) H('hSaveOutside').onclick=async()=>{
+   const name=H('hoName').value.trim(), amount=Number(H('hoAmount').value||0);
+   if(!name||amount<=0)return alert('नाव आणि रक्कम भरा.');
+   await add({type:'in',donor_name:name,amount,transaction_date:H('hoDate').value||today,payment_mode:'Cash',category:'बाहेरील / गावातील देणगी',mobile_note:H('hoNote').value.trim(),treasurer:'Karan'});
+   H('hOutsideForm').classList.add('hidden'); H('hoName').value='';H('hoAmount').value='';H('hoNote').value='';
+ };
+ if(H('hAddExpense')) H('hAddExpense').onclick=()=>{if(typeof editor!=='undefined'&&!editor){alert('खजिनदार Login आवश्यक आहे.');return;} H('hExpenseForm').classList.remove('hidden'); if(H('heDate'))H('heDate').value=new Date().toLocaleDateString('en-CA');};
+ if(H('hCancelExpense')) H('hCancelExpense').onclick=()=>H('hExpenseForm').classList.add('hidden');
+ if(H('hSaveExpense')) H('hSaveExpense').onclick=async()=>{
+   const name=H('heName').value.trim(), amount=Number(H('heAmount').value||0);
+   if(!name||amount<=0)return alert('वर्णन आणि रक्कम भरा.');
+   await add({type:'out',description:name,amount,transaction_date:H('heDate').value||today,payment_mode:'Cash',category:'इतर',bill_no_note:H('heNote').value.trim(),treasurer:'Karan'});
+   H('hExpenseForm').classList.add('hidden'); H('heName').value='';H('heAmount').value='';H('heNote').value='';
+ };
 
-    const wo=XLSX.utils.json_to_sheet(outsideH.map((x,i)=>({
-      'क्रमांक':i+1,'नाव':x.name||'','रक्कम':Number(x.amount||0),'तारीख':x.date||'','नोंद':x.note||''
-    })));
-    wo['!cols']=[{wch:10},{wch:30},{wch:16},{wch:16},{wch:38}];
-    XLSX.utils.book_append_sheet(wb,wo,'बाहेरील वर्गणी');
-
-    const we=XLSX.utils.json_to_sheet(expensesH.map((x,i)=>({
-      'क्रमांक':i+1,'खर्चाचे वर्णन':x.name||'','रक्कम':Number(x.amount||0),'तारीख':x.date||'','नोंद':x.note||''
-    })));
-    we['!cols']=[{wch:10},{wch:34},{wch:16},{wch:16},{wch:38}];
-    XLSX.utils.book_append_sheet(wb,we,'खर्च');
-
-    const ledger=[
-      ['प्रकार','नाव / वर्णन','रक्कम','तारीख','नोंद'],
-      ...membersH.filter(x=>Number(x.paid||0)>0).map(x=>['जमा - सदस्य वर्गणी',x.name,Number(x.paid||0),'','']),
-      ...outsideH.map(x=>['जमा - बाहेरील वर्गणी',x.name,Number(x.amount||0),x.date||'',x.note||'']),
-      ...expensesH.map(x=>['खर्च',x.name,-Number(x.amount||0),x.date||'',x.note||''])
-    ];
-    const wl=XLSX.utils.aoa_to_sheet(ledger);
-    wl['!cols']=[{wch:25},{wch:32},{wch:16},{wch:16},{wch:38}];
-    XLSX.utils.book_append_sheet(wb,wl,'संपूर्ण हिशोब');
-
-    XLSX.writeFile(wb,'Ek_Sangh_Tarun_Mandal_Hishob_2026.xlsx');
-  };
+ if(H('hExcel')) H('hExcel').onclick=()=>{
+   if(typeof XLSX==='undefined'){alert('Excel library load झाली नाही. Internet चालू करून पुन्हा प्रयत्न करा.');return;}
+   const mem=memberRows(),out=outsideRows(),exp=expenseRows();
+   const mt=mem.reduce((a,x)=>a+Number(x.amount||0),0),ot=out.reduce((a,x)=>a+Number(x.amount||0),0),et=exp.reduce((a,x)=>a+Number(x.amount||0),0);
+   const wb=XLSX.utils.book_new();
+   const dash=[['एक संघ तरुण मंडळ | गणेशोत्सव २०२६'],['हिशोब सारांश'],['मागील वर्षाची शिल्लक',prev],['सदस्य वर्गणी',mt],['बाहेरील / गावातील वर्गणी',ot],['एकूण जमा',mt+ot],['एकूण खर्च',et],['अंतिम शिल्लक',prev+mt+ot-et]];
+   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(dash),'Dashboard');
+   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(mem.map((x,i)=>({क्रमांक:i+1,नाव:x.donor_name||'',वर्गणी:x.amount,तारीख:x.transaction_date||'',पेमेंट:x.payment_mode||'',खजिनदार:x.treasurer||'',नोंद:x.mobile_note||''}))), 'सभासद वर्गणी');
+   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(out.map(x=>({नाव:x.donor_name||'',रक्कम:x.amount,तारीख:x.transaction_date||'',पेमेंट:x.payment_mode||'',खजिनदार:x.treasurer||'',नोंद:x.mobile_note||''}))), 'बाहेरील वर्गणी');
+   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(exp.map(x=>({खर्च:x.description||'',रक्कम:x.amount,तारीख:x.transaction_date||'',Category:x.category||'',Vendor:x.vendor||'',खजिनदार:x.treasurer||'',नोंद:x.bill_no_note||''}))), 'खर्च');
+   XLSX.writeFile(wb,'Ek_Sangh_Tarun_Mandal_Hishob_2026.xlsx');
+ };
  renderH();
 })();
 </script>
