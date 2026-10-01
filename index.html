@@ -189,7 +189,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 <div class="member-summary"><div><span>एकूण सदस्य</span><b id="memberCount">24</b></div><div><span>एकूण अपेक्षित</span><b id="memberExpected">₹0</b></div><div><span>जमा</span><b class="green" id="memberPaid">₹0</b></div><div><span>बाकी</span><b class="red" id="memberDue">₹0</b></div></div>
 <div class="member-tools"><input id="memberSearch" placeholder="🔎 सदस्याचे नाव शोधा"><select id="memberStatusFilter"><option value="">सर्व</option><option value="paid">जमा</option><option value="due">बाकी</option></select><button class="primary" id="addMemberBtn" type="button">➕ नवीन सदस्य</button></div>
 <div id="memberList" class="member-list"></div>
-<div id="memberEditorBox" class="member-edit-box hidden"><div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="memberEditName"></div><div><label>वर्गणी रक्कम *</label><input id="memberEditAmount" type="number" min="0"></div><div><label>जमा रक्कम</label><input id="memberEditPaid" type="number" min="0"></div><div><label>स्थिती</label><select id="memberEditStatus"><option value="due">बाकी</option><option value="paid">जमा</option></select></div></div><div class="actions"><button class="primary" id="saveMemberEdit" type="button">💾 Save</button><button id="cancelMemberEdit" type="button">रद्द करा</button></div></div>
+<div id="memberEditorBox" class="member-edit-box hidden"><div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="memberEditName"></div><div><label>वर्गणी रक्कम *</label><input id="memberEditAmount" type="number" min="0"></div><div><label>जमा रक्कम</label><input id="memberEditPaid" type="number" min="0"></div><div><label>तारीख *</label><input id="memberEditDate" type="date"></div><div><label>स्थिती</label><select id="memberEditStatus"><option value="due">बाकी</option><option value="paid">जमा</option></select></div></div><div class="actions"><button class="primary" id="saveMemberEdit" type="button">💾 Save</button><button id="cancelMemberEdit" type="button">रद्द करा</button></div></div>
 <div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="mname"></div><div><label>वर्गणी रक्कम *</label><input id="mamount" type="number" min="1"></div><div><label>तारीख</label><input id="mdate" type="date"></div><div><label>पेमेंट पद्धत</label><select id="mmode"><option>Cash</option><option>UPI</option><option>Bank</option><option>Cheque</option></select></div><div><label>पावती क्रमांक</label><input id="mreceipt"></div><div><label>नोंद</label><input id="mnote"></div></div><div class="actions"><button class="primary" id="saveMember" type="button">➕ वर्गणी Save</button></div></div></section><div class="formgrid"><div><label>सदस्याचे नाव *</label><input id="mname"></div><div><label>वर्गणी रक्कम *</label><input id="mamount" type="number" min="1"></div><div><label>तारीख</label><input id="mdate" type="date"></div><div><label>पेमेंट पद्धत</label><select id="mmode"><option>Cash</option><option>UPI</option><option>Bank</option><option>Cheque</option></select></div><div><label>पावती क्रमांक</label><input id="mreceipt"></div><div><label>नोंद</label><input id="mnote"></div></div><div class="actions"><button class="primary" id="saveMember" type="button">➕ वर्गणी Save</button></div></div></section>
 
 <section id="donation" class="page hidden editor"><div class="card">
@@ -413,7 +413,7 @@ async function syncMemberToLedger(id){
  }else{
    const {error}=await db.from("transactions").insert([{
      mandal_id:MANDAL_ID,type:"in",donor_name:m.name,amount:paid,
-     transaction_date:today,payment_mode:"Cash",category:"सदस्य वर्गणी",
+     transaction_date:m.date||today,payment_mode:"Cash",category:"सदस्य वर्गणी",
      treasurer:treasurer,mobile_note:"सदस्यांची वर्गणी"
    }]);
    if(error){alert("नोंदवहीत नोंद झाली नाही: "+error.message);return}
@@ -450,24 +450,25 @@ function renderMembers(){
 function editMember(id){
  const m=members.find(x=>x.id===id);if(!m)return;
  memberEditId=id;$('memberEditName').value=m.name;$('memberEditAmount').value=m.amount;$('memberEditPaid').value=m.paid;
- $('memberEditStatus').value=m.status;$('memberEditorBox').classList.remove('hidden');$('memberEditorBox').scrollIntoView({behavior:'smooth',block:'center'})
+ $('memberEditDate').value=m.date||today;$('memberEditStatus').value=m.status;$('memberEditorBox').classList.remove('hidden');$('memberEditorBox').scrollIntoView({behavior:'smooth',block:'center'})
 }
 window.editMember=editMember;
 $('memberSearch').oninput=renderMembers;$('memberStatusFilter').onchange=renderMembers;
-$('addMemberBtn').onclick=()=>{memberEditId=null;$('memberEditName').value='';$('memberEditAmount').value='5000';$('memberEditPaid').value='0';$('memberEditStatus').value='due';$('memberEditorBox').classList.remove('hidden');$('memberEditName').focus()};
+$('addMemberBtn').onclick=()=>{memberEditId=null;$('memberEditName').value='';$('memberEditAmount').value='5000';$('memberEditPaid').value='0';$('memberEditDate').value=today;$('memberEditStatus').value='due';$('memberEditorBox').classList.remove('hidden');$('memberEditName').focus()};
 $('cancelMemberEdit').onclick=()=>{$('memberEditorBox').classList.add('hidden');memberEditId=null};
 $('saveMemberEdit').onclick=async()=>{
- const name=$('memberEditName').value.trim(),amount=Number($('memberEditAmount').value),paid=Number($('memberEditPaid').value);
+ const name=$('memberEditName').value.trim(),amount=Number($('memberEditAmount').value),paid=Number($('memberEditPaid').value),date=$('memberEditDate').value||today;
  if(!name||amount<0||paid<0)return alert('नाव आणि योग्य रक्कम भरा.');
+ if(!date)return alert('तारीख निवडा.');
  if(paid>amount)return alert('जमा रक्कम वर्गणीपेक्षा जास्त असू शकत नाही.');
  const status=$('memberEditStatus').value;
  let savedId=memberEditId;
  if(memberEditId){
    const idx=members.findIndex(x=>x.id===memberEditId);
-   if(idx>=0) members[idx]={...members[idx],name,amount,paid,status:paid>=amount?'paid':status,treasurer:'Karan'};
+   if(idx>=0) members[idx]={...members[idx],name,amount,paid,date,status:paid>=amount?'paid':status,treasurer:'Karan'};
  }else{
    savedId='m'+Date.now();
-   members.push({id:savedId,name,amount,paid,status:paid>=amount?'paid':status,treasurer:'Karan'});
+   members.push({id:savedId,name,amount,paid,date,status:paid>=amount?'paid':status,treasurer:'Karan'});
  }
  saveMembers();renderMembers();$('memberEditorBox').classList.add('hidden');memberEditId=null;
  if(paid>0) await syncMemberToLedger(savedId);
