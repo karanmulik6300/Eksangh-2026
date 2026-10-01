@@ -107,7 +107,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 </section>
 
 <section class="grid">
- <div class="card stat"><div class="label">एकूण देणगी</div><div class="value green" id="tin">₹0</div></div>
+ <div class="card stat"><div class="label">एकूण जमा</div><div class="value green" id="tin">₹0</div></div>
  <div class="card stat"><div class="label">एकूण खर्च</div><div class="value red" id="tout">₹0</div></div>
  <div class="card stat"><div class="label">मागील वर्षाची शिल्लक</div><div class="value purple" id="prevTop">₹0</div></div>
  <div class="card stat"><div class="label">एकूण शिल्लक</div><div class="value purple" id="bal">₹0</div></div>
@@ -118,16 +118,16 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 
 <div class="tabs">
  <button class="tab active" data-tab="home" type="button">🏠 Home</button>
- <button class="tab" data-tab="ledger" type="button">📒 हिशोब नोंदवही</button><button class="tab" data-tab="hishob" type="button">📊 हिशोब</button>
+ <button class="tab" data-tab="hishob" type="button">📊 हिशोब</button>
  <button class="tab editor hidden" data-tab="member" type="button">👥 सदस्यांची वर्गणी</button><button class="tab editor hidden" data-tab="donation" type="button">🎁 बाहेरील/गावातील देणगी</button>
- <button class="tab editor hidden" data-tab="expense" type="button">💸 खर्च</button>
+ <button class="tab" data-tab="expense" type="button">💸 खर्च</button>
 </div>
 
 <section id="home" class="page">
 <div class="cols"><div class="card"><div class="listhead"><h2>💰 जमा झालेली रक्कम</h2><b class="green" id="incomeTotal">₹0</b></div><div id="incomeList"></div></div><div class="card"><div class="listhead"><h2>💸 खर्चाची यादी</h2><b class="red" id="expenseTotal">₹0</b></div><div id="expenseList"></div></div></div>
 <div class="card" style="margin-top:16px">
  <div class="listhead"><h2>💼 मागील वर्षाची शिल्लक</h2><b class="purple" id="homePrevBalance">₹0</b></div>
- <div class="muted" style="margin-bottom:12px">ही रक्कम एकूण शिल्लकमध्ये थेट जोडली जाईल.</div>
+ <div class="muted" style="margin-bottom:12px">ही रक्कम एकूण जमेमध्ये थेट जोडली जाईल आणि अंतिम शिल्लक मोजताना वापरली जाईल.</div>
  <div class="formgrid">
   <div><label>मागील वर्षाची शिल्लक</label><input id="homePrevInput" type="number" min="0" placeholder="उदा. 10000"></div>
   <div class="actions" style="align-items:end"><button class="primary" id="homePrevSave" type="button">💾 मागील शिल्लक Save</button></div>
@@ -135,31 +135,6 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
  <div class="notice" style="margin-top:12px">🧮 एकूण शिल्लक = मागील वर्षाची शिल्लक + एकूण जमा − एकूण खर्च</div>
 </div>
 </section>
-
-<section id="ledger" class="page hidden"><div class="card"><div class="bar"><h2 style="margin:0">📒 हिशोब नोंदवही</h2><span class="sectiontag">● Live</span></div><input id="search" placeholder="देणगीदार / खर्च / category शोधा">
-<div class="filter-title">🔎 व्यवहार Filter करा</div><div class="filters">
-
-<div class="filterbox"><label>जमा / खर्च</label><select id="filterType"><option value="">दोन्ही</option><option value="in">जमा</option><option value="out">खर्च</option></select></div>
-<div class="filterbox"><label>पासून तारीख</label><input id="filterFrom" type="date"></div>
-<div class="filterbox"><label>पर्यंत तारीख</label><input id="filterTo" type="date"></div>
-<div class="filterbox"><label>रक्कम</label><select id="amountPreset">
-<option value="">सर्व रक्कम</option>
-<option value="0-500">₹0 – ₹500</option>
-<option value="501-2000">₹501 – ₹2,000</option>
-<option value="2001-5000">₹2,001 – ₹5,000</option>
-<option value="5001-10000">₹5,001 – ₹10,000</option>
-<option value="10001-999999999">₹10,000 पेक्षा जास्त</option>
-</select><input id="filterMin" type="hidden"><input id="filterMax" type="hidden"></div>
-<div class="filterbox"><label>क्रमवारी</label><select id="sortBy"><option value="date-desc">तारीख ↓ नवीन ते जुनी</option><option value="date-asc">तारीख ↑ जुनी ते नवीन</option><option value="amount-desc">रक्कम ↓ जास्त ते कमी</option><option value="amount-asc">रक्कम ↑ कमी ते जास्त</option></select></div>
-<div class="filter-actions"><button id="clearFilters" type="button">फिल्टर Clear</button></div>
-</div>
-<div class="ledger-grid" style="margin-top:14px">
-<div class="card" style="margin:0"><div class="ledger-head"><h2>💰 जमा</h2><b class="green totalbox" id="ledgerIncomeTotal">₹0</b></div><div id="ledgerIncomeList"></div></div>
-<div class="card" style="margin:0"><div class="ledger-head"><h2>💸 खर्च</h2><b class="red totalbox" id="ledgerExpenseTotal">₹0</b></div><div id="ledgerExpenseList"></div></div>
-</div>
-<div class="checkbox"><div class="checkrow"><span>एकूण जमा</span><b class="green" id="checkIn">₹0</b></div><div class="checkrow"><span>एकूण खर्च</span><b class="red" id="checkOut">₹0</b></div><div class="checkrow"><span>शिल्लक</span><b class="purple" id="checkBal">₹0</b></div><div class="checkrow"><span>एकूण व्यवहार</span><b id="checkCnt">0</b></div></div>
-</div></section>
-
 
 <section id="hishob" class="page hidden">
  <div class="hnotice">📊 हा मुख्य हिशोब आहे. येथे सदस्य वर्गणी, बाहेरील वर्गणी, खर्च आणि मागील वर्षाची शिल्लक एकाच Cloud हिशोबातून दिसेल.</div>
@@ -182,7 +157,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
  </div>
  <div class="hsection"><div class="hhead"><h3>👥 सदस्यांची वर्गणी</h3><b class="hpositive" id="hMemberTotal">₹0</b></div><div id="hMemberList"></div></div>
  <div class="hsection"><div class="hhead"><h3>🎁 बाहेरील / गावातील वर्गणी</h3><b class="hpositive" id="hOutsideTotal">₹0</b></div><div class="hactions"><button class="primary" id="hAddOutside" type="button">➕ नवीन वर्गणी</button></div><div id="hOutsideList"></div><div id="hOutsideForm" class="hidden" style="margin-top:12px"><div class="hform"><div><label>नाव *</label><input id="hoName"></div><div><label>रक्कम *</label><input id="hoAmount" type="number" min="0"></div><div><label>तारीख</label><input id="hoDate" type="date"></div><div><label>नोंद</label><input id="hoNote"></div></div><div class="hactions"><button class="primary" id="hSaveOutside" type="button">💾 Save</button><button id="hCancelOutside" type="button">रद्द करा</button></div></div></div>
- <div class="hsection"><div class="hhead"><h3>💸 नवीन खर्च</h3><b class="hnegative" id="hExpenseTotal">₹0</b></div><div class="hactions"><button class="primary" id="hAddExpense" type="button">➕ नवीन खर्च</button></div><div id="hExpenseList"></div><div id="hExpenseForm" class="hidden" style="margin-top:12px"><div class="hform"><div><label>खर्चाचे वर्णन *</label><input id="heName"></div><div><label>रक्कम *</label><input id="heAmount" type="number" min="0"></div><div><label>तारीख</label><input id="heDate" type="date"></div><div><label>नोंद</label><input id="heNote"></div></div><div class="hactions"><button class="primary" id="hSaveExpense" type="button">💾 Save</button><button id="hCancelExpense" type="button">रद्द करा</button></div></div></div>
+ <div class="hsection"><div class="hhead"><h3>💸 खर्च</h3><b class="hnegative" id="hExpenseTotal">₹0</b></div><div class="hactions"><button class="primary" id="hAddExpense" type="button">➕ नवीन खर्च</button></div><div id="hExpenseGroups"></div><div id="hExpenseForm" class="hidden" style="margin-top:12px"><div class="hform"><div><label>खर्चाचे वर्णन *</label><input id="heName"></div><div><label>रक्कम *</label><input id="heAmount" type="number" min="0"></div><div><label>तारीख</label><input id="heDate" type="date"></div><div><label>प्रकार / Category *</label><select id="heCategory"><option value="इतर">इतर</option><option value="आगमन सोहळा">आगमन सोहळा</option><option value="सजीव देखावा">सजीव देखावा</option></select></div><div><label>नोंद</label><input id="heNote"></div></div><div class="hactions"><button class="primary" id="hSaveExpense" type="button">💾 Save</button><button id="hCancelExpense" type="button">रद्द करा</button></div></div></div>
 </section>
 
 <section id="member" class="page hidden editor"><div class="card"><h2>👥 मंडळाच्या सदस्यांची वर्गणी</h2>
@@ -199,7 +174,7 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 <div><label>पावती क्रमांक</label><input id="receipt"></div><div><label>Mobile / नोंद</label><input id="dnote"></div>
 </div><div class="actions"><button class="primary" id="saveDonation" type="button">➕ Save Donation</button></div></div></section>
 
-<section id="expense" class="page hidden editor"><div class="card">
+<section id="expense" class="page hidden"><div class="card">
 <h2>💸 खर्च नोंदवा</h2><div class="formgrid">
 <div><label>खर्चाचे वर्णन *</label><input id="edesc"></div><div><label>रक्कम *</label><input id="eamount" type="number" min="1"></div>
 <div><label>तारीख</label><input id="edate" type="date"></div><div><label>प्रकार</label><select id="ecat"><option>आगमन सोहळा</option><option>सजीव देखावा</option><option>इतर</option></select></div>
@@ -245,23 +220,15 @@ function render(){
  const allInc=rows.filter(x=>x.type==="in"),allOut=rows.filter(x=>x.type==="out");
  const totalIn=allInc.reduce((a,x)=>a+Number(x.amount||0),0),totalOut=allOut.reduce((a,x)=>a+Number(x.amount||0),0);
  const previous=Number(window.__previousYearBalance||0);
- const finalBalance=previous+totalIn-totalOut;
- $("tin").textContent=money(totalIn);$("tout").textContent=money(totalOut);$("bal").textContent=money(finalBalance);$("cnt").textContent=rows.length;
+ const totalCollectedWithPrevious=previous+totalIn;
+ const finalBalance=totalCollectedWithPrevious-totalOut;
+ $("tin").textContent=money(totalCollectedWithPrevious);$("tout").textContent=money(totalOut);$("bal").textContent=money(finalBalance);$("cnt").textContent=rows.length;
  if($("prevTop")) $("prevTop").textContent=money(previous);
  $("incomeTotal").textContent=money(totalIn);$("expenseTotal").textContent=money(totalOut);
  const sorted=r=>[...r].sort((a,b)=>String(b.transaction_date).localeCompare(String(a.transaction_date)));
  $("incomeList").innerHTML=sorted(allInc).map(item).join("")||'<div class="muted" style="padding:18px">जमा झालेली नोंद नाही.</div>';
  $("expenseList").innerHTML=sorted(allOut).map(item).join("")||'<div class="muted" style="padding:18px">खर्चाची नोंद नाही.</div>';
- const q=($("search").value||"").toLowerCase(),tp=$("filterType").value,from=$("filterFrom").value,to=$("filterTo").value;
- let min=$("filterMin").value===""?null:Number($("filterMin").value),max=$("filterMax").value===""?null:Number($("filterMax").value);
-  const preset=$("amountPreset")?.value||"";
-  if(preset){const p=preset.split("-");min=Number(p[0]);max=Number(p[1]);}
- const match=x=>{if(q&&!JSON.stringify(x).toLowerCase().includes(q))return false;if(tp&&x.type!==tp)return false;if(from&&String(x.transaction_date)<from)return false;if(to&&String(x.transaction_date)>to)return false;if(min!==null&&Number(x.amount||0)<min)return false;if(max!==null&&Number(x.amount||0)>max)return false;return true};
- const filtered=rows.filter(match),fin=filtered.filter(x=>x.type==="in"),fout=filtered.filter(x=>x.type==="out");
- const fIn=fin.reduce((a,x)=>a+Number(x.amount||0),0),fOut=fout.reduce((a,x)=>a+Number(x.amount||0),0);
- $("ledgerIncomeTotal").textContent=money(fIn);$("ledgerExpenseTotal").textContent=money(fOut);$("checkIn").textContent=money(fIn);$("checkOut").textContent=money(fOut);$("checkBal").textContent=money(fIn-fOut);$("checkCnt").textContent=filtered.length;
- $("ledgerIncomeList").innerHTML=sorted(fin).map(item).join("")||'<div class="muted" style="padding:18px">या filter मध्ये जमा नोंद नाही.</div>';
- $("ledgerExpenseList").innerHTML=sorted(fout).map(item).join("")||'<div class="muted" style="padding:18px">या filter मध्ये खर्च नोंद नाही.</div>';
+
 }
 async function load(){
   $("status").textContent="☁️ Cloud data load होत आहे...";
@@ -344,9 +311,6 @@ $("cancel").onclick=()=>{$("loginBox").classList.add("hidden");$("msg").classLis
 $("login").onclick=doLogin;
 $("password").onkeydown=e=>{if(e.key==="Enter")doLogin()};
 document.querySelectorAll(".tab").forEach(x=>x.onclick=()=>showTab(x.dataset.tab));
-$("search").oninput=render;
-["filterType","filterFrom","filterTo","filterMin","filterMax","amountPreset","sortBy"].forEach(id=>{$(id).oninput=render;$(id).onchange=render});
-$("clearFilters").onclick=()=>{$("search").value="";$("filterType").value="";$("filterFrom").value="";$("filterTo").value="";$("filterMin").value="";$("filterMax").value="";$("amountPreset").value="";$("sortBy").value="date-desc";render()};
 
 $("saveMember").onclick=()=>{
  const n=$("mname").value.trim(), a=Number($("mamount").value); if(!n||a<=0)return alert("नाव आणि रक्कम भरा.");
@@ -492,7 +456,7 @@ renderMembers();
   const mt=mem.reduce((a,x)=>a+Number(x.amount||0),0);
   const ot=out.reduce((a,x)=>a+Number(x.amount||0),0);
   const et=exp.reduce((a,x)=>a+Number(x.amount||0),0);
-  const previousBalance=Number(window.__previousYearBalance||prev||0); prev=previousBalance; const collected=mt+ot, bal=previousBalance+collected-et;
+  const previousBalance=Number(window.__previousYearBalance||prev||0); prev=previousBalance; const collected=previousBalance+mt+ot, bal=collected-et;
   ['hmPrev','hPrevSmall'].forEach(id=>{if(H(id))H(id).textContent=hm(previousBalance)});
   if(H('hmMember'))H('hmMember').textContent=hm(mt);
   if(H('hmOutside'))H('hmOutside').textContent=hm(ot);
@@ -507,7 +471,14 @@ renderMembers();
   const sorted=a=>[...a].sort((x,y)=>String(y.transaction_date||'').localeCompare(String(x.transaction_date||'')));
   if(H('hMemberList')) H('hMemberList').innerHTML=sorted(mem).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.donor_name||'नाव नाही')}</div><div class="hsub">👥 सदस्य वर्गणी • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.mobile_note?`<div class="hsub">📝 ${escH(x.mobile_note)}</div>`:''}</div><div><b class="hamt hpositive">${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">सभासद वर्गणीची नोंद उपलब्ध नाही.</div>';
   if(H('hOutsideList')) H('hOutsideList').innerHTML=sorted(out).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.donor_name||'नाव नाही')}</div><div class="hsub">🎁 बाहेरील / गावातील वर्गणी • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.mobile_note?`<div class="hsub">📝 ${escH(x.mobile_note)}</div>`:''}</div><div><b class="hamt hpositive">${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">बाहेरील / गावातील वर्गणीची नोंद नाही.</div>';
-  if(H('hExpenseList')) H('hExpenseList').innerHTML=sorted(exp).map(x=>`<div class="hrow"><div><div class="hname">${escH(x.description||'खर्च')}</div><div class="hsub">💸 ${escH(x.category||'खर्च')} • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.vendor?`<div class="hsub">Vendor: ${escH(x.vendor)}</div>`:''}${x.bill_no_note?`<div class="hsub">📝 ${escH(x.bill_no_note)}</div>`:''}</div><div><b class="hamt hnegative">− ${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">खर्चाची नोंद उपलब्ध नाही.</div>';
+  if(H('hExpenseGroups')) {
+   const cats=['इतर','आगमन सोहळा','सजीव देखावा'];
+   H('hExpenseGroups').innerHTML=cats.map(cat=>{
+     const list=sorted(exp.filter(x=>(x.category||'इतर')===cat));
+     const total=list.reduce((a,x)=>a+Number(x.amount||0),0);
+     return `<div class="hsection" style="margin:12px 0 0"><div class="hhead"><h3>${cat==='इतर'?'💸':cat==='आगमन सोहळा'?'🪔':'🎭'} ${escH(cat)}</h3><b class="hnegative">${hm(total)}</b></div>${list.map(x=>`<div class="hrow"><div><div class="hname">${escH(x.description||'खर्च')}</div><div class="hsub">💸 ${escH(cat)} • ${escH(x.transaction_date||'')} • ${escH(x.payment_mode||'')}</div>${x.vendor?`<div class="hsub">Vendor: ${escH(x.vendor)}</div>`:''}${x.bill_no_note?`<div class="hsub">📝 ${escH(x.bill_no_note)}</div>`:''}</div><div><b class="hamt hnegative">− ${hm(x.amount)}</b></div></div>`).join('')||'<div class="hmuted">या Category मध्ये खर्चाची नोंद नाही.</div>'}</div>`;
+   }).join('');
+ }
  }
  window.refreshHishob=renderH;
  loadPreviousBalance();
@@ -553,7 +524,7 @@ renderMembers();
  if(H('hSaveExpense')) H('hSaveExpense').onclick=async()=>{
    const name=H('heName').value.trim(), amount=Number(H('heAmount').value||0);
    if(!name||amount<=0)return alert('वर्णन आणि रक्कम भरा.');
-   await add({type:'out',description:name,amount,transaction_date:H('heDate').value||today,payment_mode:'Cash',category:'इतर',bill_no_note:H('heNote').value.trim(),treasurer:'Karan'});
+   await add({type:'out',description:name,amount,transaction_date:H('heDate').value||today,payment_mode:'Cash',category:H('heCategory').value||'इतर',bill_no_note:H('heNote').value.trim(),treasurer:'Karan'});
    H('hExpenseForm').classList.add('hidden'); H('heName').value='';H('heAmount').value='';H('heNote').value='';
  };
 
@@ -562,7 +533,7 @@ renderMembers();
    const mem=memberRows(),out=outsideRows(),exp=expenseRows();
    const mt=mem.reduce((a,x)=>a+Number(x.amount||0),0),ot=out.reduce((a,x)=>a+Number(x.amount||0),0),et=exp.reduce((a,x)=>a+Number(x.amount||0),0);
    const wb=XLSX.utils.book_new();
-   const dash=[['एक संघ तरुण मंडळ | गणेशोत्सव २०२६'],['हिशोब सारांश'],['मागील वर्षाची शिल्लक',prev],['सदस्य वर्गणी',mt],['बाहेरील / गावातील वर्गणी',ot],['एकूण जमा',mt+ot],['एकूण खर्च',et],['अंतिम शिल्लक',prev+mt+ot-et]];
+   const dash=[['एक संघ तरुण मंडळ | गणेशोत्सव २०२६'],['हिशोब सारांश'],['मागील वर्षाची शिल्लक',prev],['सदस्य वर्गणी',mt],['बाहेरील / गावातील वर्गणी',ot],['एकूण जमा',prev+mt+ot],['एकूण खर्च',et],['अंतिम शिल्लक',prev+mt+ot-et]];
    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(dash),'Dashboard');
    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(mem.map((x,i)=>({क्रमांक:i+1,नाव:x.donor_name||'',वर्गणी:x.amount,तारीख:x.transaction_date||'',पेमेंट:x.payment_mode||'',खजिनदार:'करण',नोंद:x.mobile_note||''}))), 'सभासद वर्गणी');
    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(out.map(x=>({नाव:x.donor_name||'',रक्कम:x.amount,तारीख:x.transaction_date||'',पेमेंट:x.payment_mode||'',खजिनदार:'करण',नोंद:x.mobile_note||''}))), 'बाहेरील वर्गणी');
