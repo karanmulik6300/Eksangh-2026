@@ -117,10 +117,8 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #d8d8df;border-ra
 <div id="status" class="notice loading">☁️ Cloud data load होत आहे...</div>
 
 <div class="tabs">
- <button class="tab active" data-tab="home" type="button">🏠 Home</button>
  <button class="tab" data-tab="hishob" type="button">📊 हिशोब</button>
  <button class="tab editor hidden" data-tab="member" type="button">👥 सदस्यांची वर्गणी</button><button class="tab editor hidden" data-tab="donation" type="button">🎁 बाहेरील/गावातील देणगी</button>
- <button class="tab" data-tab="expense" type="button">💸 खर्च</button>
 </div>
 
 <section id="home" class="page">
@@ -254,7 +252,7 @@ function setEditor(v){
  $("sub").textContent=v?"Cloud मध्ये Add / Delete access":"सर्वांना cloud data दिसेल";
  $("loginBtn").textContent=v?"🔓 व्यवस्थापक लॉगआउट":"🔐 व्यवस्थापक लॉगिन";
  document.querySelectorAll(".editor").forEach(x=>x.classList.toggle("hidden",!v));
- if(!v) showTab("home");
+ if(!v) showTab("hishob");
  render();
 }
 
@@ -279,7 +277,7 @@ async function doLogin(){
  if(!data.session || data.user?.email?.toLowerCase()!==EDITOR_EMAIL.toLowerCase()){
    await db.auth.signOut(); show("❌ अधिकृत व्यवस्थापक account मिळाला नाही."); return;
  }
- $("password").value=""; $("loginBox").classList.add("hidden"); setEditor(true); showTab("home"); show("✅ व्यवस्थापक Login यशस्वी.",true);
+ $("password").value=""; $("loginBox").classList.add("hidden"); setEditor(true); showTab("hishob"); show("✅ व्यवस्थापक Login यशस्वी.",true);
 }
 
 async function logout(){await db.auth.signOut();setEditor(false)}
